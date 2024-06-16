@@ -1,0 +1,11 @@
+{
+  "name": "parse-sus-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "prettify.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "author": "Tim L. Greller",
+  "license": "ISC"
+}
