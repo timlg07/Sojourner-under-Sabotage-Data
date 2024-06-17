@@ -54,3 +54,9 @@ const eventTypes = pretty
     .filter((value, index, self) => self.indexOf(value) === index);
 
 fs.writeFileSync('./eventTypes.json', JSON.stringify(eventTypes, null, 4), 'utf8');
+
+const usernames = pretty
+    .map(item => item.user)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+fs.writeFileSync('./usernames.json', JSON.stringify(usernames, null, 4), 'utf8');
