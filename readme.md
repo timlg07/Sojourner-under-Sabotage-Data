@@ -92,15 +92,15 @@ For the class sessions the following game progression order was used:
 indicates that the user finished a dialogue. Is used to switch from the TALK to the TEST status.  
 (Sent by the client)
 
-### 4. RoomUnlockedEvent
+## 4. RoomUnlockedEvent
 Signals that a room was unlocked/ a puzzle was solved. Includes the `"roomId"` parameter that indicates the room that was unlocked.  
 (Sent by the client)
 
-### 5. ComponentTestsActivatedEvent
+## 5. ComponentTestsActivatedEvent
 Signals that the user activated the tests they wrote for the component with the name `"componentName"`.  
 (Sent by the client)
 
-### 6. MutatedComponentTestsFailedEvent
+## 6. MutatedComponentTestsFailedEvent
 Is sent from the server to the client once a component was mutated and the tests written by the user failed and detected the mutation.
 ```js
 {
