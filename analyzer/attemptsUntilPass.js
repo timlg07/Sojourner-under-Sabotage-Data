@@ -31,7 +31,19 @@ const _attemptsUntilFirstPass = data.filter(item => item.eventType === 'test-exe
         return acc;
     }, usernames.map(name => ({ [name]: {} })).reduce((acc, item) => ({ ...acc, ...item }), {}))
 
-//console.log(JSON.stringify(_attemptsUntilFirstPass, null, 4));
+
+const __attemptsUntilFirstPass = Object.entries(_attemptsUntilFirstPass).reduce((acc, k) => {
+    acc[k[0]] = Object.entries(k[1]).reduce((innerAcc, component) => {
+        const fails = component[1].fails.length;
+        const success = component[1].success.length > 0;
+        innerAcc[component[0]] = {fails, success};
+        return innerAcc;
+    }, {});
+    return acc;
+}, {});
+
+fs.writeFileSync('../attemptsUntilFirstPass.json', JSON.stringify(__attemptsUntilFirstPass, null, 4), 'utf8');
+
 
 const attemptsUntilFirstPass = Object.entries(_attemptsUntilFirstPass).map((k) => {
     return {[k[0]]:Object.entries(k[1]).map(component => {
@@ -40,9 +52,6 @@ const attemptsUntilFirstPass = Object.entries(_attemptsUntilFirstPass).map((k) =
             return {[component[0]]:{fails, success}}
         })}
 });
-//console.log(JSON.stringify(attemptsUntilFirstPass, null, 4));
-fs.writeFileSync('../attemptsUntilFirstPass.json', JSON.stringify(attemptsUntilFirstPass, null, 4), 'utf8');
-
 
 const attemptsUntilFirstPassPerComponent = attemptsUntilFirstPass.reduce((acc, user) => {
     Object.entries(user).forEach((k) => {
