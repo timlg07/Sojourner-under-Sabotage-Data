@@ -1,11 +1,6 @@
 node_modules
 
-data.*.json
-eventTypes.json
-usernames.json
-levelReached.json
-reachedAtLeastLevel3.json
-timeUntilFirstPass.json
-timeUntilActivation.json
-attemptsUntilFirstPass.json
-attemptsUntilActivation.json
+*.json
+!package.json
+!package-lock.json
+!data.json
