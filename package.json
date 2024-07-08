@@ -4,7 +4,9 @@
   "description": "",
   "main": "prettify.js",
   "scripts": {
-    "start": "node ."
+    "start": "node prettify.js & node analyze.js",
+    "analyze": "node analyze.js",
+    "prettify": "node prettify.js"
   },
   "author": "Tim L. Greller",
   "license": "ISC"
