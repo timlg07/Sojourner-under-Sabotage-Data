@@ -9,5 +9,8 @@
     "prettify": "node prettify.js"
   },
   "author": "Tim L. Greller",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^10.4.3"
+  }
 }
