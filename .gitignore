@@ -1,4 +1,5 @@
 node_modules
+TestSmellDetector.jar
 
 /test/
 *.csv

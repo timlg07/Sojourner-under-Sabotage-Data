@@ -4,13 +4,15 @@
   "description": "",
   "main": "prettify.js",
   "scripts": {
-    "start": "node prettify.js & node analyze.js",
+    "start": "node prettify.js && node analyze.js && node smell.js",
     "analyze": "node analyze.js",
-    "prettify": "node prettify.js"
+    "prettify": "node prettify.js",
+    "smell": "node smell.js"
   },
   "author": "Tim L. Greller",
   "license": "ISC",
   "dependencies": {
+    "download": "^8.0.0",
     "glob": "^10.4.3",
     "json-2-csv": "^5.5.4"
   }

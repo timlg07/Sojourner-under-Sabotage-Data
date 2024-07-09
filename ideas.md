@@ -5,6 +5,7 @@
 - [X] percentage of max/final coverage
 - [ ] percentage of coverage on first successful run
 - [ ] amount of test smells per successful run
+- [X] test smells of the final run
 
 ## Debugging
 - [ ] attempts until bug fixed
