@@ -11,6 +11,7 @@
   "author": "Tim L. Greller",
   "license": "ISC",
   "dependencies": {
-    "glob": "^10.4.3"
+    "glob": "^10.4.3",
+    "json-2-csv": "^5.5.4"
   }
 }
