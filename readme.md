@@ -1,3 +1,9 @@
+# Prettify & Analyze Data
+```shell
+npm install
+npm start
+```
+
 # Event Types explained
 There are 14 event types:
 - GameStartedEvent
