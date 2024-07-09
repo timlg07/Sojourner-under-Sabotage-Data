@@ -30,7 +30,7 @@ const finalCode = Object.entries(data
         const c = item[0];
         const data = item[1];
         acc[c] = {sourceCode: data.modifications.reduce((acc, item) => {
-            if (item.timestamp >= acc.timestamp) {
+            if (data.endTime >= item.timestamp && item.timestamp >= acc.timestamp) {
                 return item;
             }
             return acc;
