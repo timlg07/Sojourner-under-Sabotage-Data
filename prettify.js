@@ -40,6 +40,12 @@ const pretty = filtered
             };
         }
 
+        // test-/cut-modified: rename component name
+        if (item.eventType === 'test-modified' || item.eventType === 'cut-modified') {
+            item.json.componentName = item.json.component;
+            delete item.json.component;
+        }
+
         // rename json to data
         item.data = item.json;
         delete item.json;
