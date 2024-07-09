@@ -56,3 +56,16 @@ const codeAtActivation = Object.entries(finalCode).reduce((acc, item) => {
     return acc;
 }, {});
 fs.writeFileSync('../codeAtActivation.json', JSON.stringify(codeAtActivation, null, 4), 'utf8');
+
+const codeAtActivation_formatted = Object.entries(codeAtActivation).reduce((acc, item) => {
+    const name = item[0];
+    const components = item[1];
+    acc[name] = Object.entries(components).reduce((acc, item) => {
+        const c = item[0];
+        acc[c] = item[1].split('\n');
+        return acc;
+    }, {});
+    return acc;
+}, {});
+
+fs.writeFileSync('../codeAtActivation_formatted.json', JSON.stringify(codeAtActivation_formatted, null, 4), 'utf8');
