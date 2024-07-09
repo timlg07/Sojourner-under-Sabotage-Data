@@ -1,8 +1,6 @@
 const fs = require('fs');
 /** @type {Map<string, Map<string, string>>} */
 const data = require('../codeAtActivation.json');
-/** @type {string[]} */
-const usernames = require('../usernames.json');
 
 function stripComments(src) {
     return src.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
