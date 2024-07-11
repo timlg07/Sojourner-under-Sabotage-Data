@@ -6,15 +6,25 @@ const usernames = require('../usernames.json');
 
 
 // Attempts until the test for a component passes for the first time per user and component
-const _attemptsUntilFirstPass = data.filter(item => item.eventType === 'test-executed')
+const _attemptsUntilFirstPass = data.filter(item => ['test-executed', 'test-execution-failed'].includes(item.eventType))
     .reduce((acc, item) => {
-        const failed = item.data.executionResult.testStatus === 'FAILED';
         if (!acc[item.user][item.data.componentName]) {
             acc[item.user][item.data.componentName] = {
                 fails: [],
+                errors: [],
                 success: [],
             }
         }
+
+        if (item.eventType === 'test-execution-failed') {
+            const s = acc[item.user][item.data.componentName].success;
+            if (s.length === 0 || s[s.length - 1] >= item.timestamp) {
+                acc[item.user][item.data.componentName].errors.push(item.timestamp);
+            }
+            return acc;
+        }
+
+        const failed = item.data.executionResult.testStatus === 'FAILED';
         if (failed) {
             const s = acc[item.user][item.data.componentName].success;
             if (s.length === 0 || s[s.length - 1] >= item.timestamp) {
@@ -27,6 +37,8 @@ const _attemptsUntilFirstPass = data.filter(item => item.eventType === 'test-exe
             }
             acc[item.user][item.data.componentName].fails =
                 acc[item.user][item.data.componentName].fails.filter(fail => fail < item.timestamp)
+            acc[item.user][item.data.componentName].errors =
+                acc[item.user][item.data.componentName].errors.filter(error => error < item.timestamp)
         }
         return acc;
     }, usernames.map(name => ({ [name]: {} })).reduce((acc, item) => ({ ...acc, ...item }), {}))
@@ -35,8 +47,9 @@ const _attemptsUntilFirstPass = data.filter(item => item.eventType === 'test-exe
 const __attemptsUntilFirstPass = Object.entries(_attemptsUntilFirstPass).reduce((acc, k) => {
     acc[k[0]] = Object.entries(k[1]).reduce((innerAcc, component) => {
         const fails = component[1].fails.length;
+        const errors = component[1].errors.length;
         const success = component[1].success.length > 0;
-        innerAcc[component[0]] = {fails, success};
+        innerAcc[component[0]] = {fails, errors, success};
         return innerAcc;
     }, {});
     return acc;
