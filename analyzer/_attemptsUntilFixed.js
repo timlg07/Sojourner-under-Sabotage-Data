@@ -3,7 +3,7 @@ const {execRes2Coverage} = require('../utils/executionResultTransformer');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
 const isInRange = ({timestamp}, {startTime, endTime}) => timestamp >= startTime && timestamp <= endTime;
-const events = ['DebugStartEvent', 'ComponentFixedEvent', 'cut-modified', 'test-executed'];// ignore 'test-execution-failed' because there were no fails during debugging
+const events = ['DebugStartEvent', 'ComponentFixedEvent', 'cut-modified', 'ComponentTestsExtendedEvent', 'test-executed'];// ignore 'test-execution-failed' because there were no fails during debugging
 const _attemptsUntilFixed = data
     .filter(item => events.includes(item.eventType))
     .reduce((acc, item) => {
@@ -16,7 +16,8 @@ const _attemptsUntilFixed = data
                 startTime: 0,
                 endTime: Number.POSITIVE_INFINITY,
                 modifications: [],
-                executions: []
+                executions: [],
+                hiddenTestsAdded: []
             }
         }
 
@@ -40,6 +41,10 @@ const _attemptsUntilFixed = data
             }
         }
 
+        if (item.eventType === 'ComponentTestsExtendedEvent') {
+            acc[item.user][c].hiddenTestsAdded.push(item);
+        }
+
         return acc;
     }, {});
 
@@ -57,6 +62,13 @@ const prettifyExecutionInfo = (exec) => {
         //coverage: execRes2Coverage(exec.data.executionResult),
         //testStatus: exec.data.executionResult.testStatus,
         //hiddenTestsPassed: exec.data.executionResult.hiddenTestsPassed,
+    };
+}
+
+const prettifyHiddenTestsAddedInfo = (hid) => {
+    return {
+        timestamp: hid.timestamp,
+        hiddenTests: hid.data.addedTestMethodName
     };
 }
 
@@ -84,7 +96,10 @@ const attemptsUntilFixed = Object.entries(_attemptsUntilFixed).reduce((acc, [use
                                .map(prettifyModificationInfo),
             executions: item.executions
                             .filter(e => isInRange(e, item))
-                            .map(prettifyExecutionInfo)
+                            .map(prettifyExecutionInfo),
+            hiddenTestsAdded: item.hiddenTestsAdded
+                                .filter(h => isInRange(h, item))
+                                .map(prettifyHiddenTestsAddedInfo)
         };
         return acc;
     }, {});
@@ -102,7 +117,8 @@ const attemptsUntilFixedSummary = Object.entries(attemptsUntilFixed).reduce((acc
         acc[c] = {
             deltaTime: item.deltaTime / 1e3 / 60,
             modifications: item.modifications.length,
-            executions: item.executions.length + 1 // add final execution that fixed the component back in
+            executions: item.executions.length + 1, // add final execution that fixed the component back in
+            hiddenTestsAdded: item.hiddenTestsAdded.length
         };
         return acc;
     }, {});
