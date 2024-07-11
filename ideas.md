@@ -10,10 +10,10 @@
 - [ ] (optional: run test suites against other mutants)
 
 ## Debugging
-- [ ] attempts until bug fixed:
-  - [ ] amount of changes
-  - [ ] amount of test runs
-- [ ] amount of hidden test methods added during debugging
-- [ ] time until bug fixed
+- [X] attempts until bug fixed:
+  - [X] amount of changes
+  - [X] amount of test runs
+- [X] amount of hidden test methods added during debugging
+- [X] time until bug fixed
 - [ ] amount of print statements added per run
-
+- [ ] history of CUT source code
