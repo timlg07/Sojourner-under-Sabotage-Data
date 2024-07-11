@@ -6,8 +6,15 @@
 - [ ] percentage of coverage on first successful run
 - [ ] amount of test smells per successful run
 - [X] test smells of the final run
+- [ ] amount of test runs that passed/failed
+- [ ] did the tests find the mutants?
+- [ ] (optional: run test suites against other mutants)
 
 ## Debugging
-- [ ] attempts until bug fixed
+- [ ] attempts until bug fixed:
+  - [ ] amount of changes
+  - [ ] amount of test runs
+- [ ] amount of hidden test methods added during debugging
 - [ ] time until bug fixed
 - [ ] amount of print statements added per run
+
