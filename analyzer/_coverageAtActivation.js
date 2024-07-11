@@ -3,6 +3,7 @@ const fs = require('fs');
 const data = require('../data.pretty.json');
 /** @type {string[]} */
 const usernames = require('../usernames.json');
+const {execRes2Coverage} = require('../utils/executionResultTransformer');
 
 
 // Time until the tests are activated per user and component
@@ -35,10 +36,7 @@ const finalCoverage = Object.entries(data
             }
             return acc;
         }, {timestamp: 0}).data.executionResult;
-        const extractCurrentCompCoverage = (acc, item) => item[0].includes(c) ? item[1] : acc;
-        const coveredLines = Object.entries(execRes.coveredLines).reduce(extractCurrentCompCoverage, {});
-        const totalLines = Object.entries(execRes.totalLines).reduce(extractCurrentCompCoverage, {});
-        acc[c] = {coveredLines, totalLines, fraction: coveredLines / totalLines};
+        acc[c] = execRes2Coverage(execRes, c);
         acc[c].wasActivated = data.endTime !== Number.POSITIVE_INFINITY;
         return acc;
     }, {});
