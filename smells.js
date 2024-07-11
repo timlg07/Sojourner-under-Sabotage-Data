@@ -1,6 +1,7 @@
 const {exec} = require('child_process');
 const {glob} = require("glob");
 const {csv2json} = require('json-2-csv');
+const download = require('download');
 const fs = require('fs');
 
 const removeEmptySmellEntries = true;
@@ -12,7 +13,6 @@ const jar = 'TestSmellDetector.jar';
 (async () => {
     // download the TestSmellDetector.jar from GitHub if necessary
     if (!fs.existsSync(jar)) {
-        const download = require('download');
         await download(url + jar, '.', {extract: false}).pipe(fs.createWriteStream(jar));
     }
 
@@ -45,8 +45,10 @@ const jar = 'TestSmellDetector.jar';
                 data[username] = {};
             }
 
-            item['Dependent Test'] = item['Dependent Test\r'];
-            delete item['Dependent Test\r'];
+            if (item['Dependent Test\r']) {
+                item['Dependent Test'] = item['Dependent Test\r'];
+                delete item['Dependent Test\r'];
+            }
 
             delete item.App;
             delete item.TestClass;
