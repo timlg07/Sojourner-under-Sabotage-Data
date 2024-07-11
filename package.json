@@ -12,6 +12,7 @@
   "author": "Tim L. Greller",
   "license": "ISC",
   "dependencies": {
+    "diff-match-patch": "^1.0.5",
     "download": "^8.0.0",
     "glob": "^10.4.3",
     "json-2-csv": "^5.5.4"
