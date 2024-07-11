@@ -7,13 +7,14 @@ const usernames = require('../usernames.json');
 
 // Attempts until the test for a component passes for the first time per user and component
 const _attemptsUntilActivation = data
-    .filter(item => ['ComponentTestsActivatedEvent', 'test-executed'].includes(item.eventType))
+    .filter(item => ['ComponentTestsActivatedEvent', 'test-executed', 'test-execution-failed'].includes(item.eventType))
     .reduce((acc, item) => {
         const c = item.data.componentName ?? item.data.progression.componentName;
 
         if (!acc[item.user][c]) {
             acc[item.user][c] = {
                 fails: [],
+                errors: [],
                 success: [],
                 activation: []
             }
@@ -33,6 +34,11 @@ const _attemptsUntilActivation = data
             }
         }
 
+        if (item.eventType === 'test-execution-failed') {
+            acc[item.user][c].errors.push(item.timestamp);
+            return acc;
+        }
+
         const failed = item.data.executionResult.testStatus === 'FAILED';
         if (failed) {
             acc[item.user][c].fails.push(item.timestamp);
@@ -45,8 +51,9 @@ const _attemptsUntilActivation = data
 const attemptsUntilActivation = Object.entries(_attemptsUntilActivation).reduce((acc, k) => {
     acc[k[0]] = Object.entries(k[1]).reduce((innerAcc, component) => {
             const fails = component[1].fails.length;
+            const errors = component[1].errors.length;
             const successes = component[1].success.length;
-            innerAcc[component[0]] = {fails, successes};
+            innerAcc[component[0]] = {fails, errors, successes};
             return innerAcc;
         }, {});
     return acc;
