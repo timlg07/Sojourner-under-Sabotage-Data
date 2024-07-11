@@ -15,5 +15,5 @@
   - [X] amount of test runs
 - [X] amount of hidden test methods added during debugging
 - [X] time until bug fixed
-- [ ] amount of print statements added per run
-- [ ] history of CUT source code
+- [X] amount of print statements added per run
+- [X] history of CUT source code
