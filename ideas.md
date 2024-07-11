@@ -6,7 +6,7 @@
 - [ ] percentage of coverage on first successful run
 - [ ] amount of test smells per successful run
 - [X] test smells of the final run
-- [ ] amount of test runs that passed/failed
+- [X] amount of test runs that passed/failed until activation
 - [ ] did the tests find the mutants?
 - [ ] (optional: run test suites against other mutants)
 
