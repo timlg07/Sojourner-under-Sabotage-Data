@@ -4,7 +4,6 @@
 - [X] amount of test methods
 - [X] percentage of max/final coverage
 - [ ] percentage of coverage on first successful run
-- [ ] amount of test smells per successful run
 - [X] test smells of the final run
 - [X] amount of test runs that passed/failed until activation
 - [ ] did the tests find the mutants?
