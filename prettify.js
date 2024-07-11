@@ -46,6 +46,13 @@ const pretty = filtered
             delete item.json.component;
         }
 
+        // test-execution-failed events do not contain a component name
+        if (item.eventType === 'test-execution-failed') {
+            const message = item.json;
+            const componentName = /.*\n\/(.*?)(Test)?\.java:/.exec(message)[1];
+            item.json = {componentName, message};
+        }
+
         // rename json to data
         item.data = item.json;
         delete item.json;
