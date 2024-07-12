@@ -1,7 +1,15 @@
-# In R
-x <- 5
-y <- 6
-z <- 3
-result <- max(x, y, z)
+main <- function(libPaths = .libPaths(), rDir = "visualizer/", entry = "index.R", outputDir = "./") {
+  # add user library path (not loaded when called from nodeJS)
+  .libPaths(libPaths)
 
-print(result)
+  library(dplyr)
+  library(maps)
+
+  # List files and source each
+  list.files(path = rDir, pattern = ".+\\.R") %>%
+    lapply(function(file) {
+      if (file != entry) {
+        source(paste0(rDir, file), local = TRUE)
+      }
+    })
+}

@@ -1,2 +1,4 @@
 const R = require('r-integration');
-R.executeRScript("./visualizer/index.R");
+const config = require('./config.json');
+const stdout = R.callMethod("./visualizer/index.R", "main", config);
+stdout.forEach(console.log);

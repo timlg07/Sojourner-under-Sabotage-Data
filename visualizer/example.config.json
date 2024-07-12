@@ -1,0 +1,7 @@
+{
+  "libPaths": [
+    "C:/Users/username/Documents/R/win-library/version",
+    "C:/Program Files/R/R-version/library"
+  ],
+  "outputDir": "C:/path/to/thesis/img/"
+}

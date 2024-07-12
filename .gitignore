@@ -7,3 +7,7 @@ TestSmellDetector.jar
 !package.json
 !package-lock.json
 !data.json
+
+/visualizer/config.json
+!/visualizer/example.config.json
+*.png
