@@ -7,7 +7,7 @@
     "start": "npm run-script prettify && npm run-script analyze && npm run-script smell && npm run-script visualize",
     "prettify": "node prettify.js",
     "analyze": "node analyze.js",
-    "smell": "node smell.js",
+    "smell": "node smells.js",
     "visualize": "node visualizer/visualize.js"
   },
   "author": "Tim L. Greller",
