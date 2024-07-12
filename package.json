@@ -4,10 +4,11 @@
   "description": "",
   "main": "prettify.js",
   "scripts": {
-    "start": "node prettify.js && node analyze.js && node smell.js",
-    "analyze": "node analyze.js",
+    "start": "npm run-script prettify && npm run-script analyze && npm run-script smell && npm run-script visualize",
     "prettify": "node prettify.js",
-    "smell": "node smell.js"
+    "analyze": "node analyze.js",
+    "smell": "node smell.js",
+    "visualize": "node visualizer/visualize.js"
   },
   "author": "Tim L. Greller",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "diff-match-patch": "^1.0.5",
     "download": "^8.0.0",
     "glob": "^10.4.3",
-    "json-2-csv": "^5.5.4"
+    "json-2-csv": "^5.5.4",
+    "r-integration": "^2.4.0"
   }
 }
