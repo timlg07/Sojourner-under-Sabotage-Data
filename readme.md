@@ -1,7 +1,25 @@
-# Prettify & Analyze Data
+# Prettify, Analyze, Visualize Data
+## Install Dependencies
 ```shell
 npm install
+```
+
+## Prettify, Analyze Data
+```shell
 npm start
+```
+
+## Visualize Data
+For the visualization of the data, please make sure to have [R](https://www.r-project.org/) installed on your machine.  
+The installation will be found automatically.  
+To supply the required packages, copy the `visualizer/example.config.
+json`
+to `visualizer/config.json` and add your default library paths (obtained by running `.libPaths()` in the R console).
+
+You can also define an alternative output directory for the visualizations in the config file (e.g. the image folder of the LaTeX directory).
+
+```shell
+npm run visualize
 ```
 
 # Event Types explained
