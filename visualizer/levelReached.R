@@ -2,13 +2,15 @@ library(jsonlite)
 library(ggplot2)
 library(dplyr)
 
+if (!exists("outputDir")) outputDir <- "./"
+
 level_reached <- fromJSON(txt="levelReached.json", flatten=TRUE)
 keyval_to_df <- function(x) {
   data.frame(key = names(x), value = unlist(x), stringsAsFactors = FALSE)
 }
 level_reached_df <- keyval_to_df(level_reached)
 
-# group by level
+# group by level and count the amount of players
 level_reached_amount <- level_reached_df %>%
   group_by(value) %>%
   summarise(count = n())
@@ -19,4 +21,3 @@ plot <- ggplot(level_reached_amount, aes(x = value, y = count)) +
   theme_minimal()
 plot
 ggsave(paste0(outputDir, "level_reached.png"), plot, width = 15, height = 10, units = "cm", dpi = 300, limitsize = FALSE, device = "png")
-
