@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
 /** @type {string[]} */
@@ -19,10 +19,13 @@ const highestLevelReachedPerUser = usernames.map(name => {
     acc[name] = item[name];
     return acc;
 });
-fs.writeFileSync('../levelReached.json', JSON.stringify(highestLevelReachedPerUser, null, 4), 'utf8');
+
+save('../levelReached.json', highestLevelReachedPerUser);
+
 
 const reachedAtLeastLevel3 = Object.entries(highestLevelReachedPerUser).filter((k) => k[1] >= 3).reduce((acc, item) => {
     acc[item[0]] = item[1];
     return acc;
 }, {});
-fs.writeFileSync('../reachedAtLeastLevel3.json', JSON.stringify(reachedAtLeastLevel3, null, 4), 'utf8');
+
+save('../reachedAtLeastLevel3.json', reachedAtLeastLevel3);

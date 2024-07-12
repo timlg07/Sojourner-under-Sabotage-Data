@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
 
@@ -11,7 +11,7 @@ const destroyedOrAlarm = data.filter(item => events.includes(item.eventType)).re
     return acc;
 }, {});
 
-fs.writeFileSync('../destroyedOrAlarm.json', JSON.stringify(destroyedOrAlarm, null, 4), 'utf8');
+save('../destroyedOrAlarm.json', destroyedOrAlarm);
 
 const destroyedOrAlarmPerComponent = Object.values(destroyedOrAlarm).reduce((acc, item) => {
     Object.entries(item).forEach(([component, status]) => {
@@ -23,4 +23,4 @@ const destroyedOrAlarmPerComponent = Object.values(destroyedOrAlarm).reduce((acc
     return acc;
 }, {});
 
-fs.writeFileSync('../destroyedOrAlarmPerComponent.json', JSON.stringify(destroyedOrAlarmPerComponent, null, 4), 'utf8');
+save('../destroyedOrAlarmPerComponent.json', destroyedOrAlarmPerComponent);

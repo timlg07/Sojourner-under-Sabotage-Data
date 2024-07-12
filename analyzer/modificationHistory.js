@@ -1,4 +1,5 @@
 const fs = require('fs');
+const save = require('../utils/save');
 const DiffMatchPatch = require('diff-match-patch');
 const attemptsUntilFixed = require('../attemptsUntilFixed_detailed.json');
 
@@ -29,7 +30,7 @@ const modificationHistory = Object.entries(attemptsUntilFixed).reduce((acc, [use
     return acc;
 }, {});
 
-fs.writeFileSync('../modificationHistory_full.json', JSON.stringify(modificationHistory, null, 4), 'utf8');
+save('../modificationHistory_full.json', modificationHistory);
 
 
 const parseAndPrettifyPatch = (patch) => {
@@ -67,4 +68,4 @@ const modificationHistoryChanges = Object.entries(attemptsUntilFixed).reduce((ac
     return acc;
 }, {});
 
-fs.writeFileSync('../modificationHistory_changes.json', JSON.stringify(modificationHistoryChanges, null, 4), 'utf8');
+save('../modificationHistory_changes.json', modificationHistoryChanges);

@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
 /** @type {string[]} */
@@ -50,4 +50,5 @@ const timePerLevel = Object.entries(data
         }, {});
     return acc;
 }, {})
-fs.writeFileSync('../timePerLevel.json', JSON.stringify(timePerLevel, null, 4), 'utf8');
+
+save('../timePerLevel.json', timePerLevel);

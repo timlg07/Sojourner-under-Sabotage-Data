@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 /** @type {Map<string, Map<string, string>>} */
 const data = require('../codeAtActivation.json');
 
@@ -24,4 +24,4 @@ const amountOfTestMethods = Object.entries(data).reduce((acc, item) => {
     return acc;
 }, {});
 
-fs.writeFileSync('../amountOfTestMethods.json', JSON.stringify(amountOfTestMethods, null, 4), 'utf8');
+save('../amountOfTestMethods.json', amountOfTestMethods);

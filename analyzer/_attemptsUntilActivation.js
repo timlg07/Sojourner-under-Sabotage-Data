@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
 /** @type {string[]} */
@@ -59,5 +59,4 @@ const attemptsUntilActivation = Object.entries(_attemptsUntilActivation).reduce(
     return acc;
 }, {});
 
-fs.writeFileSync('../attemptsUntilActivation.json', JSON.stringify(attemptsUntilActivation, null, 4), 'utf8');
-
+save('../attemptsUntilActivation.json', attemptsUntilActivation)

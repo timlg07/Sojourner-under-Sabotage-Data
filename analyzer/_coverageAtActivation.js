@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
 /** @type {string[]} */
@@ -42,7 +42,7 @@ const finalCoverage = Object.entries(data
     }, {});
     return acc;
 }, {});
-fs.writeFileSync('../finalCoverage.json', JSON.stringify(finalCoverage, null, 4), 'utf8');
+save('../finalCoverage.json', finalCoverage);
 
 const coverageAtActivation = Object.entries(finalCoverage).reduce((acc, item) => {
     const name = item[0];
@@ -58,4 +58,5 @@ const coverageAtActivation = Object.entries(finalCoverage).reduce((acc, item) =>
     }, {});
     return acc;
 }, {});
-fs.writeFileSync('../coverageAtActivation.json', JSON.stringify(coverageAtActivation, null, 4), 'utf8');
+
+save('../coverageAtActivation.json', coverageAtActivation);

@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
 /** @type {string[]} */
@@ -40,7 +40,7 @@ const finalCode = Object.entries(data
     }, {});
     return acc;
 }, {});
-fs.writeFileSync('../finalCode.json', JSON.stringify(finalCode, null, 4), 'utf8');
+save('../finalCode.json', finalCode);
 
 const codeAtActivation = Object.entries(finalCode).reduce((acc, item) => {
     const name = item[0];
@@ -55,7 +55,7 @@ const codeAtActivation = Object.entries(finalCode).reduce((acc, item) => {
     }, {});
     return acc;
 }, {});
-fs.writeFileSync('../codeAtActivation.json', JSON.stringify(codeAtActivation, null, 4), 'utf8');
+save('../codeAtActivation.json', codeAtActivation);
 
 const codeAtActivation_formatted = Object.entries(codeAtActivation).reduce((acc, item) => {
     const name = item[0];
@@ -68,4 +68,4 @@ const codeAtActivation_formatted = Object.entries(codeAtActivation).reduce((acc,
     return acc;
 }, {});
 
-fs.writeFileSync('../codeAtActivation_formatted.json', JSON.stringify(codeAtActivation_formatted, null, 4), 'utf8');
+save('../codeAtActivation_formatted.json', codeAtActivation_formatted);

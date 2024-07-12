@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 const {execRes2Coverage} = require('../utils/executionResultTransformer');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
@@ -106,7 +106,7 @@ const attemptsUntilFixed = Object.entries(_attemptsUntilFixed).reduce((acc, [use
     return acc;
 }, {});
 
-fs.writeFileSync('../attemptsUntilFixed_detailed.json', JSON.stringify(attemptsUntilFixed, null, 4), 'utf8');
+save('../attemptsUntilFixed_detailed.json', attemptsUntilFixed);
 
 const attemptsUntilFixedSummary = Object.entries(attemptsUntilFixed).reduce((acc, [user, v]) => {
     acc[user] = Object.entries(v).reduce((acc, [c, item]) => {
@@ -125,4 +125,4 @@ const attemptsUntilFixedSummary = Object.entries(attemptsUntilFixed).reduce((acc
     return acc;
 }, {});
 
-fs.writeFileSync('../attemptsUntilFixed_summary.json', JSON.stringify(attemptsUntilFixedSummary, null, 4), 'utf8');
+save('../attemptsUntilFixed_summary.json', attemptsUntilFixedSummary);

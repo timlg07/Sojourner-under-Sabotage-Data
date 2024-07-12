@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 const DiffMatchPatch = require('diff-match-patch');
 const attemptsUntilFixed = require('../attemptsUntilFixed_detailed.json');
 
@@ -62,7 +62,7 @@ const printsAddedPerComponent = Object.entries(attemptsUntilFixed).reduce((acc, 
     return acc;
 }, {});
 
-fs.writeFileSync('../printsAddedPerComponent.json', JSON.stringify(printsAddedPerComponent, null, 4), 'utf8');
+save('../printsAddedPerComponent.json', printsAddedPerComponent);
 
 
 // todo: remove?
@@ -79,8 +79,7 @@ const printsAddedPerRun = Object.entries(attemptsUntilFixed).reduce((acc, [user,
     return acc;
 }, {});
 
-fs.writeFileSync('../printsAddedPerRun.json', JSON.stringify(printsAddedPerRun, null, 4), 'utf8');
-
+save('../printsAddedPerRun.json', printsAddedPerRun);
 
 // all print contents:
-fs.writeFileSync('../printContents.json', JSON.stringify(allPrints, null, 4), 'utf8');
+save('../printContents.json', allPrints);

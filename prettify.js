@@ -1,5 +1,5 @@
 const data = require('./data.json');
-const fs = require('fs');
+const save = require('./utils/save');
 const filtered = data
     .map(item => {
         item.json = JSON.parse(item.json);
@@ -15,7 +15,7 @@ const filtered = data
         item.id > i.id
     ))
 
-fs.writeFileSync('./data.filtered.json', JSON.stringify(filtered, null, 4), 'utf8');
+save('data.filtered.json', filtered);
 
 const pretty = filtered
     .map(item => {
@@ -60,16 +60,17 @@ const pretty = filtered
         return item;
     });
 
-fs.writeFileSync('./data.pretty.json', JSON.stringify(pretty, null, 4), 'utf8');
+save('data.pretty.json', pretty);
+
 
 const eventTypes = pretty
     .map(item => item.eventType)
     .filter((value, index, self) => self.indexOf(value) === index);
 
-fs.writeFileSync('./eventTypes.json', JSON.stringify(eventTypes, null, 4), 'utf8');
+save('eventTypes.json', eventTypes);
 
 const usernames = pretty
     .map(item => item.user)
     .filter((value, index, self) => self.indexOf(value) === index);
 
-fs.writeFileSync('./usernames.json', JSON.stringify(usernames, null, 4), 'utf8');
+save('usernames.json', usernames);

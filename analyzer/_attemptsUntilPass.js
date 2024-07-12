@@ -1,4 +1,4 @@
-const fs = require('fs');
+const save = require('../utils/save');
 /** @type {Array<{eventType: string, timestamp: number, user: string, data: any}>} */
 const data = require('../data.pretty.json');
 /** @type {string[]} */
@@ -55,8 +55,7 @@ const __attemptsUntilFirstPass = Object.entries(_attemptsUntilFirstPass).reduce(
     return acc;
 }, {});
 
-fs.writeFileSync('../attemptsUntilFirstPass.json', JSON.stringify(__attemptsUntilFirstPass, null, 4), 'utf8');
-
+save('../attemptsUntilFirstPass.json', __attemptsUntilFirstPass);
 
 const attemptsUntilFirstPass = Object.entries(_attemptsUntilFirstPass).map((k) => {
     return {[k[0]]:Object.entries(k[1]).map(component => {

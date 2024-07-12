@@ -1,8 +1,9 @@
 const {exec} = require('child_process');
 const {glob} = require("glob");
 const {csv2json} = require('json-2-csv');
-const download = require('download');
 const fs = require('fs');
+const download = require('download');
+const save = require('./utils/save');
 
 const removeEmptySmellEntries = true;
 const outputFilePattern = 'Output_TestSmellDetection_*.csv';
@@ -66,6 +67,6 @@ const jar = 'TestSmellDetector.jar';
             data[username][componentName] = item;
         });
 
-        fs.writeFileSync('testSmellDetectorOutput.json', JSON.stringify(data, null, 4), 'utf8');
+        save('testSmellDetectorOutput.json', data);
     }
 })();
