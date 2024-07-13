@@ -5,5 +5,5 @@ library(purrr)
 
 if (!exists("outputDir")) outputDir <- "./"
 
-attempts <- fromJSON(txt="./visualizer/attemptsUntilActivation_r.json", flatten=TRUE)
+attempts <- fromJSON(txt="./visualizer/r_json/attemptsUntilActivation_r.json", flatten=TRUE)
 

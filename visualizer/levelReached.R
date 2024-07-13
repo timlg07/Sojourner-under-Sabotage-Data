@@ -4,14 +4,10 @@ library(dplyr)
 
 if (!exists("outputDir")) outputDir <- "./"
 
-level_reached <- fromJSON(txt="levelReached.json", flatten=TRUE)
-keyval_to_df <- function(x) {
-  data.frame(key = names(x), value = unlist(x), stringsAsFactors = FALSE)
-}
-level_reached_df <- keyval_to_df(level_reached)
+level_reached <- fromJSON(txt="./visualizer/r_json/levelReached_r.json", flatten=TRUE)
 
 # group by level and count the amount of players
-level_reached_amount <- level_reached_df %>%
+level_reached_amount <- level_reached %>%
   group_by(value) %>%
   summarise(count = n())
 
