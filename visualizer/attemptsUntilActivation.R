@@ -4,7 +4,7 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
-if (!exists("outputDir")) outputDir <- "./"
+if (!exists("outputDir")) outputDir <- "./visualizer/out/"
 
 attempts <- fromJSON(txt = "./visualizer/r_json/attemptsUntilActivation_r.json", flatten = TRUE)
 

@@ -4,6 +4,8 @@ const save = require('../utils/save');
 const filesToFlatten2 = [
     'attemptsUntilActivation',
     'attemptsUntilFirstPass',
+    'timeUntilActivation',
+    'timeUntilFirstPass',
 ];
 const filesToFlatten = [
     'levelReached',

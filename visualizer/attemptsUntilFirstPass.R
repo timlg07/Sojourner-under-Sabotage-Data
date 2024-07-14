@@ -4,7 +4,7 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
-if (!exists("outputDir")) outputDir <- "./"
+if (!exists("outputDir")) outputDir <- "./visualizer/out/"
 
 attempts <- fromJSON(txt = "./visualizer/r_json/attemptsUntilFirstPass_r.json", flatten = TRUE) %>%
   filter(success) %>%
@@ -114,11 +114,11 @@ print(paste0("Chi-Square test p-value: ", result$p.value))
 
 
 plot <- ggplot(data = m, aes(x = componentIndex, y = total)) +
-  # geom_boxplot(aes(x = componentName), alpha = 0.25, color = "gray") +
+  geom_boxplot(aes(x = componentName), alpha = 0.25, color = "gray") +
   labs(title = "Attempts per component for users that reached level 4", x = "Component", y = "Attempts") +
   geom_point(aes(x = componentName)) +
-  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red") +
-  geom_smooth(se = FALSE, color = "blue")
+  # geom_smooth(se = FALSE, color = "blue") +
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red")
 plot
 ggsave(filename = paste0(outputDir, "attemptsUntilFirstPass_trend.png"), plot, width = 10, height = 8)
 

@@ -2,7 +2,7 @@ library(jsonlite)
 library(ggplot2)
 library(dplyr)
 
-if (!exists("outputDir")) outputDir <- "./"
+if (!exists("outputDir")) outputDir <- "./visualizer/out/"
 
 level_reached <- fromJSON(txt="./visualizer/r_json/levelReached_r.json", flatten=TRUE)
 
