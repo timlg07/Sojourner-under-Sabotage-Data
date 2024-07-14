@@ -3,6 +3,7 @@ const save = require('../utils/save');
 
 const filesToFlatten2 = [
     'attemptsUntilActivation',
+    'attemptsUntilFirstPass',
 ];
 const filesToFlatten = [
     'levelReached',
