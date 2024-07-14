@@ -117,7 +117,8 @@ plot <- ggplot(data = m, aes(x = componentIndex, y = total)) +
   # geom_boxplot(aes(x = componentName), alpha = 0.25, color = "gray") +
   labs(title = "Attempts per component for users that reached level 4", x = "Component", y = "Attempts") +
   geom_point(aes(x = componentName)) +
-  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red")
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red") +
+  geom_smooth(se = FALSE, color = "blue")
 plot
 ggsave(filename = paste0(outputDir, "attemptsUntilFirstPass_trend.png"), plot, width = 10, height = 8)
 
@@ -125,8 +126,9 @@ plot <- ggplot(data = m_no_cryo, aes(x = componentName, y = total)) +
   # geom_boxplot(aes(x = componentName), alpha = 0.25, color = "gray") +
   labs(title = "Attempts per component for users that reached level 4", x = "Component", y = "Attempts") +
   geom_point(aes(x = componentName)) +
-  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red", aes(x = componentIndex - 1))
-# plot
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red", aes(x = componentIndex - 1), linetype = "dashed") +
+  geom_smooth(se = FALSE, color = "blue", aes(x = componentIndex - 1))
+plot
 ggsave(filename = paste0(outputDir, "attemptsUntilFirstPass_trend_no_cryo.png"), plot, width = 10, height = 8)
 
 model <- lm(total ~ componentIndex, data = m)
@@ -141,3 +143,5 @@ if (slope < 0 && p_value < 0.05) {
 } else {
   print("There is no significant downward linear trend.")
 }
+print(paste0("Residual Standard Error = ", sigma(model)))
+print(paste0("R-squared = ", summary_model$r.squared))
