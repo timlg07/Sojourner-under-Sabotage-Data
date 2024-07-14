@@ -5,6 +5,10 @@ main <- function(libPaths = .libPaths(), rDir = "visualizer/", entry = "index.R"
   library(dplyr)
   library(maps)
 
+  if (!endsWith(outputDir, "/")) {
+    outputDir <- paste0(outputDir, "/")
+  }
+
   # List files and source each
   list.files(path = rDir, pattern = ".+\\.R") %>%
     lapply(function(file) {
