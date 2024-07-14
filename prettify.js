@@ -1,6 +1,6 @@
 const data = require('./data.json');
 const save = require('./utils/save');
-const filtered = data
+const _filtered = data
     .map(item => {
         item.json = JSON.parse(item.json);
         return item;
@@ -15,7 +15,29 @@ const filtered = data
         item.id > i.id
     ))
 
+const didInteract = _filtered
+    .reduce((acc, item) => {
+        if (!acc[item.user.username]) {
+            acc[item.user.username] = false;
+        }
+
+        const isInitialEvent = (
+            item.eventType === 'GameStartedEvent'
+        ) || (
+            item.eventType === 'GameProgressionChangedEvent'
+            && item.json.progression.id === 1
+            && item.json.progression.status === 'TALK'
+        );
+
+        if (!isInitialEvent) {
+            acc[item.user.username] = true;
+        }
+        return acc;
+    }, []);
+
+const filtered = _filtered.filter(item => didInteract[item.user.username]);
 save('data.filtered.json', filtered);
+
 
 const pretty = filtered
     .map(item => {
