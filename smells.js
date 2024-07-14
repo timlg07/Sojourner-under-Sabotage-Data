@@ -14,7 +14,7 @@ const jar = 'TestSmellDetector.jar';
 (async () => {
     // download the TestSmellDetector.jar from GitHub if necessary
     if (!fs.existsSync(jar)) {
-        await download(url + jar, '.', {extract: false}).pipe(fs.createWriteStream(jar));
+        await download(url + jar, '.', {extract: false});
     }
 
     // delete previous output files
