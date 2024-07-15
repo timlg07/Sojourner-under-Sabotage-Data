@@ -32,13 +32,13 @@ total_debugging_per_user <- time_debugging %>%
   group_by(user) %>%
   summarise(total_time = sum(deltaTime))
 
-plot_time_spent <- function (total_time_df) {
+plot_time_spent <- function (total_time_df, box_plot_scale = .15) {
   total_time_melted <- melt(total_time_df, id = "user")
 
   plot <- ggplot(data = total_time_melted, aes(x = variable, y = value, fill = variable, group = variable)) +
     geom_violin(alpha = .5, color = "transparent") +
-    geom_boxplot(width = .15, color = "white") +
-    labs(title = "Total time spent on each type of tasks per user",
+    geom_boxplot(width = box_plot_scale, color = "white") +
+    labs(title = paste0("Total time spent on each type of tasks per user (", nrow(total_time_df), " users considered)"),
          x = "Type of tasks", y = "Time spent in minutes", fill = "Type of tasks", group = "Type of tasks") +
     scale_fill_manual(values = c("#00d070", "#ff9e49", "#579ad6"), labels = c("Testing", "Debugging", "Other")) +
     expand_limits(y = 0) +
@@ -59,13 +59,19 @@ total_time <- total_time[, c("user", "test", "debug", "other")]
 
 plot <- plot_time_spent(total_time)
 plot
-ggsave(filename = paste0(outputDir, "timeSpentOnTasks.png"), plot, width = 10, height = 8)
+ggsave(filename = paste0(outputDir, "time_spent_on_tasks.png"), plot, width = 10, height = 8)
 
 # restrict to only people who reached level 4
 level_reached <- fromJSON(txt = "./visualizer/r_json/levelReached_r.json", flatten = TRUE)
 users_that_reached_level4 <- level_reached %>%
   filter(value > 3) %>%
   select(user)
-total_time <- inner_join(total_time, users_that_reached_level4, by = "user")
+total_time_level4 <- inner_join(total_time, users_that_reached_level4, by = "user")
 
-# plot_time_spent(total_time)
+plot <- plot_time_spent(total_time_level4, box_plot_scale = .08)
+plot
+ggsave(filename = paste0(outputDir, "img_time_spent_on_tasks_level4+.png"), plot, width = 10, height = 8)
+
+# find users that are in level_reached, but not in the total_time df
+users_not_in_total_time <- level_reached %>%
+  anti_join(total_time, by = "user")
