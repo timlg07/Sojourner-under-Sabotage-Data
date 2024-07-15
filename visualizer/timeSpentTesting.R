@@ -36,7 +36,7 @@ plot_time_spent <- function (total_time_df) {
   total_time_melted <- melt(total_time_df, id = "user")
 
   plot <- ggplot(data = total_time_melted, aes(x = variable, y = value, fill = variable, group = variable)) +
-    geom_violin(alpha = .75, color = "transparent") +
+    geom_violin(alpha = .5, color = "transparent") +
     geom_boxplot(width = .15, color = "white") +
     labs(title = "Total time spent on each type of tasks per user",
          x = "Type of tasks", y = "Time spent in minutes", fill = "Type of tasks", group = "Type of tasks") +
