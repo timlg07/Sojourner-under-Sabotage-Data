@@ -94,8 +94,9 @@ plot
 
 plot <- ggplot(data = m, aes(x = componentIndex, y = value)) +
   geom_boxplot(aes(x = componentName), alpha = 0.25, color = "gray") +
+  geom_violin(aes(x = componentName), alpha = .25) +
   labs(title = "time per component for users that reached level 4", x = "Component", y = "time in min") +
-  geom_point() +
+  # geom_point() +
   geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red", aes(x = componentIndex)) + #linetype = "dashed"
   # geom_smooth(se = FALSE, color = "blue", aes(x = componentIndex)) +
   expand_limits(y = 0)
