@@ -11,16 +11,9 @@ time_testing <- fromJSON(txt = "./visualizer/r_json/timeUntilActivation_r.json",
   mutate(value = as.numeric(value)) %>%
   filter(value < 55) # continued playing at home
 
-avg_per_user <- time_testing %>%
-  group_by(user) %>%
-  summarise(avg_time = mean(value))
-
 total_testing_per_user <- time_testing %>%
   group_by(user) %>%
   summarise(total_time = sum(value))
-
-avg_time_spent_testing <- mean(time_testing$value)
-print(paste("Average time spent testing:", avg_time_spent_testing))
 
 time_debugging <- fromJSON(txt = "./visualizer/r_json/attemptsUntilFixed_summary_r.json", flatten = TRUE) %>%
   filter(deltaTime != "not fixed") %>%
@@ -31,6 +24,13 @@ time_debugging <- fromJSON(txt = "./visualizer/r_json/attemptsUntilFixed_summary
 total_debugging_per_user <- time_debugging %>%
   group_by(user) %>%
   summarise(total_time = sum(deltaTime))
+
+# build everything in one df
+total_time <- inner_join(total_testing_per_user, total_debugging_per_user, by = "user")
+total_time$test <- total_time$total_time.x
+total_time$debug <- total_time$total_time.y
+total_time$other <- 60 - total_time$test - total_time$debug
+total_time <- total_time[, c("user", "test", "debug", "other")]
 
 plot_time_spent <- function (total_time_df, box_plot_scale = .15) {
   total_time_melted <- melt(total_time_df, id = "user")
@@ -49,14 +49,6 @@ plot_time_spent <- function (total_time_df, box_plot_scale = .15) {
   return(plot)
 }
 
-# build everything in one df
-total_time <- inner_join(total_testing_per_user, total_debugging_per_user, by = "user")
-total_time$test <- total_time$total_time.x
-total_time$debug <- total_time$total_time.y
-total_time$other <- 60 - total_time$test - total_time$debug
-total_time <- total_time[, c("user", "test", "debug", "other")]
-
-
 plot <- plot_time_spent(total_time)
 plot
 ggsave(filename = paste0(outputDir, "time_spent_on_tasks.png"), plot, width = 10, height = 8)
@@ -70,8 +62,9 @@ total_time_level4 <- inner_join(total_time, users_that_reached_level4, by = "use
 
 plot <- plot_time_spent(total_time_level4, box_plot_scale = .08)
 plot
-ggsave(filename = paste0(outputDir, "img_time_spent_on_tasks_level4+.png"), plot, width = 10, height = 8)
+ggsave(filename = paste0(outputDir, "time_spent_on_tasks_level4+.png"), plot, width = 10, height = 8)
 
 # find users that are in level_reached, but not in the total_time df
 users_not_in_total_time <- level_reached %>%
   anti_join(total_time, by = "user")
+# (they're not included as they haven't activated a single test -> no data)

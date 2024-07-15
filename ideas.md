@@ -17,3 +17,7 @@
 - [X] time until bug fixed
 - [X] amount of print statements added per run
 - [X] history of CUT source code
+
+
+## Other
+- [ ] Time spent per component & user -> how much time spent on "other" (besides test/debug)
