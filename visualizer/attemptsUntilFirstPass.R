@@ -167,11 +167,3 @@ ggplot(model, aes(.fitted, sqrt(abs(.stdresid)))) +
   labs(title = "Scale-Location",
        x = "Fitted values",
        y = "Sqrt(|Standardized residuals|)")
-
-# Optional: Plot the data and the regression line
-ggplot(df, aes(x = componentIndex, y = total)) +
-  geom_point() +
-  geom_smooth(method = "lm", col = "blue") +
-  labs(title = "Linear Regression of Total vs ComponentIndex",
-       x = "Component Index",
-       y = "Total")
