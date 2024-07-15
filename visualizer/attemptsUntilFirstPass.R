@@ -145,3 +145,33 @@ if (slope < 0 && p_value < 0.05) {
 }
 print(paste0("Residual Standard Error = ", sigma(model)))
 print(paste0("R-squared = ", summary_model$r.squared))
+
+
+# Check assumptions
+# Residuals vs Fitted plot
+ggplot(model, aes(.fitted, .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "Residuals vs Fitted",
+       x = "Fitted values",
+       y = "Residuals")
+
+# Normal Q-Q plot
+qqnorm(resid(model))
+qqline(resid(model), col = "red")
+
+# Scale-Location plot (Homoscedasticity)
+ggplot(model, aes(.fitted, sqrt(abs(.stdresid)))) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  labs(title = "Scale-Location",
+       x = "Fitted values",
+       y = "Sqrt(|Standardized residuals|)")
+
+# Optional: Plot the data and the regression line
+ggplot(df, aes(x = componentIndex, y = total)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Linear Regression of Total vs ComponentIndex",
+       x = "Component Index",
+       y = "Total")
