@@ -52,16 +52,10 @@ ggsave(filename = paste0(outputDir, "time_spent_per_component.png"), plot, width
 
 average_testing_time <- mean(times %>% filter(test > 0) %>% select(test) %>% unlist())
 average_debugging_time <- mean(times %>% filter(debug > 0) %>% select(debug) %>% unlist())
-print(paste("Average time spent testing:", average_testing_time))
-print(paste("Average time spent debugging:", average_debugging_time))
 minimum_testing_time <- min(times %>% filter(test > 0) %>% select(test) %>% unlist())
 minimum_debugging_time <- min(times %>% filter(debug > 0) %>% select(debug) %>% unlist())
-print(paste("Minimum time spent testing:", minimum_testing_time))
-print(paste("Minimum time spent debugging:", minimum_debugging_time))
 maximum_testing_time <- max(times %>% filter(test > 0) %>% select(test) %>% unlist())
 maximum_debugging_time <- max(times %>% filter(debug > 0) %>% select(debug) %>% unlist())
-print(paste("Maximum time spent testing:", maximum_testing_time))
-print(paste("Maximum time spent debugging:", maximum_debugging_time))
 
 # restrict to only people who reached level 4
 level_reached <- fromJSON(txt = "./visualizer/r_json/levelReached_r.json", flatten = TRUE)
