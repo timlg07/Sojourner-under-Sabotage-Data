@@ -32,6 +32,9 @@ averages <- debugging %>%
   summarise(avg_time = mean(deltaTime), avg_mod = mean(modifications),
             avg_exc = mean(executions), avg_hid = mean(hiddenTestsAdded))
 
+totals <- debugging %>%
+  summarise(total_time = sum(deltaTime), total_mod = sum(modifications),
+            total_exc = sum(executions), total_hid = sum(hiddenTestsAdded))
 
 debugging_melted <- melt(debugging, id = c("componentName", "user")) %>%
   filter(variable != "executions")
