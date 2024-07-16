@@ -97,9 +97,11 @@ component_name_to_index <- function(component_name) {
   )
 }
 
-nn <- attempts %>%
+nnn <- attempts %>%
   filter(user %in% users_that_reached_level4$user) %>%
-  filter(componentName != "ReactorLog") %>%
+  filter(componentName != "ReactorLog")
+
+nn <- nnn %>%
   group_by(user, componentName) %>%
   summarise(total = errors + fails + successes)
 
@@ -140,6 +142,30 @@ p_value <- summary_model$coefficients["componentIndex", "Pr(>|t|)"]
 p_value
 slope
 if (slope < 0 && p_value < 0.05) {
+  print("There is a significant downward linear trend.")
+} else {
+  print("There is no significant downward linear trend.")
+}
+
+nnn_melted <- melt(nnn, id = c("user", "componentName"))
+ggplot(data = nnn_melted, aes(x = componentName, y = value, color = variable, group = interaction(componentName, variable))) +
+  geom_boxplot(width = .5) +
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ x, aes(group = variable), linetype = "dashed", size = .5) +
+  labs(title = "Attempts per component for users that reached level 4", x = "Component", y = "Attempts",
+       fill = "Type of metric", group = "Type of metric") +
+  scale_color_manual(values = c("red", "blue", "orange"), labels = c("Errors", "Fails", "Successes")) +
+  scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 100, 2)), breaks = seq(0, 100, 2))
+
+nnn <- nnn %>%
+  mutate(componentIndex = sapply(componentName, component_name_to_index))
+model_nnn <- lm(errors ~ componentIndex, data = nnn)
+summary_model_nnn <- summary(model_nnn)
+# Extract the slope (coefficient of componentIndex) and p-value
+slope_nnn <- summary_model_nnn$coefficients["componentIndex", "Estimate"]
+p_value_nnn <- summary_model_nnn$coefficients["componentIndex", "Pr(>|t|)"]
+# Check if the slope is negative and the p-value is significant
+print(paste0("Slope: ", slope_nnn, ", p-value: ", p_value_nnn))
+if (slope_nnn < 0 && p_value_nnn < 0.05) {
   print("There is a significant downward linear trend.")
 } else {
   print("There is no significant downward linear trend.")
