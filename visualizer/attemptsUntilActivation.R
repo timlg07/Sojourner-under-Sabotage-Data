@@ -52,7 +52,7 @@ ggplot(data = avg_per_component_melted, aes(x = componentName, group = variable,
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
-  labs(title = "Average errors, fails and successes per component", x = "Component", y = "Average") +
+  labs(title = "Average errors, fails and successes of test run attempts per component", x = "Component", y = "Average", fill = "Result") +
   scale_fill_manual(values = c("red", "orange", "green"), labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
   geom_text(aes(label = ifelse(value > 0, round(value, 1), '')), position = position_stack(vjust = 0.5), size = 3)
