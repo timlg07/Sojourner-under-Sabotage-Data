@@ -9,6 +9,11 @@ if (!exists("outputDir")) outputDir <- "./visualizer/out/"
 destroyed_or_alarm <- fromJSON(txt = "./visualizer/r_json/destroyedOrAlarm_r.json", flatten = TRUE) %>%
   mutate(value = as.character(value))
 
+overall <- destroyed_or_alarm %>%
+  group_by(value) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
 counts <- destroyed_or_alarm %>%
   group_by(componentName, value) %>%
   summarise(count = n())
@@ -90,4 +95,4 @@ ds$coefficients
 
 a <- lm(alarm ~ total_time, data = time_and_results)
 as <- summary(a)
-a_slope <- as$coefficients
+as$coefficients
