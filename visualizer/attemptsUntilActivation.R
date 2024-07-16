@@ -17,9 +17,13 @@ sum_all <- attempts %>%
 avg_all <- attempts %>%
   summarise(avg_errors = mean(errors), avg_fails = mean(fails), avg_successes = mean(successes))
 
+attempts_total_avg <- attempts %>%
+  summarise(avg_total = mean(errors + fails + successes))
+
 avg_per_component <- attempts %>%
   group_by(componentName) %>%
-  summarise(avg_errors = mean(errors), avg_fails = mean(fails), avg_successes = mean(successes))
+  summarise(avg_errors = mean(errors), avg_fails = mean(fails), avg_successes = mean(successes),
+            total = avg_errors + avg_fails + avg_successes)
 
 sum_per_component <- attempts %>%
   group_by(componentName) %>%
@@ -36,15 +40,23 @@ ggplot(data = avg_per_component, aes(x = componentName, group = 1)) +
   labs(title = "Average errors, fails and successes per component", x = "Component", y = "Average")
 
 users <- nrow(avg_per_user)
-avg_per_component_melted <- melt(avg_per_component, id = "componentName")
-plot <- ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
+avg_per_component_melted <- melt(avg_per_component, id = c("componentName", "total"))
+ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
   geom_area(position = "stack") +
   scale_fill_manual(values = c("red", "orange", "green"), labels = c("Errors", "Fails", "Successes")) +
   labs(title = paste0("Average errors, fails and successes per user & component (total users: ", users, ")"), x = "Component", y = "Average attempts", fill = "Type", group = "Type")
-plot
+ggsave(filename = paste0(outputDir, "attemptsUntilActivation_avg_per_component.png"), width = 10, height = 5)
 
-ggsave(filename = paste0(outputDir, "attemptsUntilActivation_avg_per_component.png"), plot, width = 10, height = 5)
-
+# same plot, but stretched to percentages
+ggplot(data = avg_per_component_melted, aes(x = componentName, group = variable, y = value / total)) +
+  geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
+  geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
+  geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
+  labs(title = "Average errors, fails and successes per component", x = "Component", y = "Average") +
+  scale_fill_manual(values = c("red", "orange", "green"), labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
+  scale_y_continuous(labels = scales::percent_format(scale = 100)) +
+  geom_text(aes(label = ifelse(value > 0, round(value, 1), '')), position = position_stack(vjust = 0.5), size = 3)
+ggsave(filename = paste0(outputDir, "attempts_until_activation_avg_per_component_percentages.png"), width = 8, height = 5)
 
 level_reached <- fromJSON(txt = "./visualizer/r_json/levelReached_r.json", flatten = TRUE)
 users_that_reached_level4 <- level_reached %>%
@@ -95,7 +107,7 @@ m <- nn %>%
   mutate(componentIndex = sapply(componentName, component_name_to_index)) %>%
   arrange(componentIndex)
 
-contingency_table <- xtabs (~ nn$componentName + nn$total)
+contingency_table <- xtabs(~nn$componentName + nn$total)
 contingency_table
 
 # perform Chi-Square test
