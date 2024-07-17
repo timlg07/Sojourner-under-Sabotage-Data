@@ -46,7 +46,7 @@ ggplot(data = gender, aes(x = "", fill = Gender, y = n)) +
 ggsave(filename = paste0(outputDir, "gender.png"), width = 12, height = 6)
 # ----
 
-# ---- PLOT --- Experience with Java ------------
+# ---- PLOT --- Experience with Programming ------------
 # likert plots of Experience.with.Java
 experience <- survey %>%
   select(Java = "Experience.with.Java", Programming = "Experience.with.programming..any.language.")
@@ -64,6 +64,13 @@ experience <- experience %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_experience)))
 gglikert(experience) +
   scale_fill_viridis_d(option = "plasma")
+ggsave(filename = paste0(outputDir, "experience_with_programming_likert.png"), width = 12, height = 6)
+# as bar chart
+ggplot(experience, aes(y = Java)) +
+  geom_bar(width = .5) +
+  theme_minimal() +
+  labs(title = "Experience with Java", y = "Experience", x = "Players")
+ggsave(filename = paste0(outputDir, "experience_with_programming_bar.png"), width = 12, height = 6)
 # ----
 
 # ---- PLOT --- other likert plots ------------
@@ -77,6 +84,7 @@ all <- survey %>%
   rename_with(~gsub("\\.", " ", .x)) %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
 gglikert(all)
+ggsave(filename = paste0(outputDir, "likert_plots.png"), width = 20, height = 30)
 # ----
 
 # ---- PLOT --- Age as likert plot ------------
@@ -90,6 +98,7 @@ likert_levels_age <- age %>%
 age <- tibble(Age = age$Age) %>% # defactorize using tibble
   mutate(across(everything(), ~factor(.x, levels = likert_levels_age)))
 gglikert(age)
+ggsave(filename = paste0(outputDir, "age.png"), width = 12, height = 6)
 # heatmap
 age_counts <- age %>%
   group_by(Age) %>%
