@@ -2,14 +2,18 @@ main <- function(libPaths = .libPaths(), rDir = "visualizer/", entry = "index.R"
   # add user library path (not loaded when called from nodeJS)
   .libPaths(libPaths)
 
+  # required for the %>% operator
   library(dplyr)
-  library(maps)
 
+  # support paths without trailing slash
   if (!endsWith(outputDir, "/")) {
     outputDir <- paste0(outputDir, "/")
   }
 
-  # List files and source each
+  # prohibit generation of the Rplots.pdf
+  pdf(NULL)
+
+  # execute all R files in the directory
   list.files(path = rDir, pattern = ".+\\.R") %>%
     lapply(function(file) {
       if (file != entry) {
