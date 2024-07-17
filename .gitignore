@@ -7,6 +7,7 @@ TestSmellDetector.jar
 !package.json
 !package-lock.json
 !data.json
+!survey.csv
 
 /visualizer/config.json
 !/visualizer/example.config.json
