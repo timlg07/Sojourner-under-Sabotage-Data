@@ -50,12 +50,20 @@ ggsave(filename = paste0(outputDir, "gender.png"), width = 12, height = 6)
 # likert plots of Experience.with.Java
 experience <- survey %>%
   select(Java = "Experience.with.Java", Programming = "Experience.with.programming..any.language.")
-likert_levels_experience <- experience %>%
-  pull(Java) %>%
-  unique()
+# get programmatically (wrong order)
+# likert_levels_experience <- experience %>% pull(Java) %>% unique()
+# for (val in likert_levels_experience) { print(val) }
+likert_levels_experience <- c(
+  "< 3 months",
+  ">= 3 months && < 6 months",
+  ">= 6 months && < 1 year",
+  ">= 1 year && < 3 years",
+  ">= 3 years"
+)
 experience <- experience %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_experience)))
-gglikert(experience)
+gglikert(experience) +
+  scale_fill_viridis_d(option = "plasma")
 # ----
 
 # ---- PLOT --- other likert plots ------------
