@@ -17,15 +17,20 @@ course_of_study <- survey %>%
   arrange(desc(n)) %>%
   mutate(courseOfStudy = factor(courseOfStudy, levels = courseOfStudy)) %>%
   mutate(percentage = n / sum(n) * 100) %>%
-  mutate(courseOfStudy = paste0(courseOfStudy, " (", round(percentage, 0), " %)"))
+  mutate(courseOfStudy = paste0(formatC(100 - round(percentage, 0), 2, flag = '0'), "__", # just there for the ordering
+                                courseOfStudy, " (", round(percentage, 0), " %)")) # actual name
 ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n)) +
   geom_bar(stat = "identity") +
   coord_polar("y", start = 0, clip = "on") +
+  theme_minimal() +
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Course of study") +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
   geom_text(aes(label = ifelse(percentage > 5, paste(round(percentage, 0), "%"), '')), position = position_stack(vjust = 0.5), color = "white") +
-  scale_fill_manual(values = c("#00d070", "#ff9e49", "#579ad6", "#f0e442", "#0072b2", "#d55e00", "#cc79a7"))
-ggsave(filename = paste0(outputDir, "course_of_study.png"), width = 12, height = 6)
+  scale_fill_manual(values = c("#1f77b4", "#2ca02c", "#ff7f0e", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"),
+                    labels = course_of_study %>% # remove order prefix
+                      mutate(courseOfStudy = gsub("\\d+__", '', courseOfStudy)) %>%
+                      pull(courseOfStudy))
+ggsave(filename = paste0(outputDir, "course_of_study.png"), width = 6, height = 4)
 # ----
 
 # ---- PLOT --- Gender ------------
@@ -39,11 +44,12 @@ gender <- survey %>%
 ggplot(data = gender, aes(x = "", fill = Gender, y = n)) +
   geom_bar(stat = "identity") +
   coord_polar("y", start = 0, clip = "on") +
+  theme_minimal() +
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Gender") +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
   geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "#444444") +
   scale_fill_manual(values = c("pink", "lightblue"))
-ggsave(filename = paste0(outputDir, "gender.png"), width = 12, height = 6)
+ggsave(filename = paste0(outputDir, "gender.png"), width = 6, height = 4)
 # ----
 
 # ---- PLOT --- Experience with Programming ------------
@@ -64,13 +70,13 @@ experience <- experience %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_experience)))
 gglikert(experience) +
   scale_fill_viridis_d(option = "plasma")
-ggsave(filename = paste0(outputDir, "experience_with_programming_likert.png"), width = 12, height = 6)
+ggsave(filename = paste0(outputDir, "experience_with_programming_likert.png"), width = 10, height = 3)
 # as bar chart
 ggplot(experience, aes(y = Java)) +
   geom_bar(width = .5) +
   theme_minimal() +
   labs(title = "Experience with Java", y = "Experience", x = "Players")
-ggsave(filename = paste0(outputDir, "experience_with_programming_bar.png"), width = 12, height = 6)
+ggsave(filename = paste0(outputDir, "experience_with_programming_bar.png"), width = 10, height = 3)
 # ----
 
 # ---- PLOT --- other likert plots ------------
@@ -84,7 +90,7 @@ all <- survey %>%
   rename_with(~gsub("\\.", " ", .x)) %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
 gglikert(all)
-ggsave(filename = paste0(outputDir, "likert_plots.png"), width = 20, height = 30)
+ggsave(filename = paste0(outputDir, "likert_plots.png"), width = 9, height = 9)
 # ----
 
 # ---- PLOT --- Age as likert plot ------------
@@ -98,7 +104,7 @@ likert_levels_age <- age %>%
 age <- tibble(Age = age$Age) %>% # defactorize using tibble
   mutate(across(everything(), ~factor(.x, levels = likert_levels_age)))
 gglikert(age)
-ggsave(filename = paste0(outputDir, "age.png"), width = 12, height = 6)
+ggsave(filename = paste0(outputDir, "age.png"), width = 10, height = 3)
 # heatmap
 age_counts <- age %>%
   group_by(Age) %>%
