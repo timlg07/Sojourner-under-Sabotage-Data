@@ -51,8 +51,8 @@ ggsave(filename = paste0(outputDir, "gender.png"), width = 12, height = 6)
 experience <- survey %>%
   select(Java = "Experience.with.Java", Programming = "Experience.with.programming..any.language.")
 likert_levels_experience <- experience %>%
-    pull(Java) %>%
-    unique()
+  pull(Java) %>%
+  unique()
 experience <- experience %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_experience)))
 gglikert(experience)
@@ -69,3 +69,33 @@ all <- survey %>%
   rename_with(~gsub("\\.", " ", .x)) %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
 gglikert(all)
+# ----
+
+# ---- PLOT --- Age as likert plot ------------
+age <- survey %>%
+  select(Age)
+likert_levels_age <- age %>%
+  mutate(Age = as.character(Age)) %>%
+  pull(Age) %>%
+  unique() %>%
+  sort()
+age <- tibble(Age = age$Age) %>% # defactorize using tibble
+  mutate(across(everything(), ~factor(.x, levels = likert_levels_age)))
+gglikert(age)
+# heatmap
+age_counts <- age %>%
+  group_by(Age) %>%
+  summarise(n = n()) %>%
+  arrange(Age)
+ggplot(age_counts, aes(x = Age, y = 1, fill = n)) +
+  geom_tile() +
+  ylab("") +
+  scale_fill_viridis_c(option = "plasma")
+# values
+avg_age <- age %>%
+  summarise(avg_age = mean(as.numeric(as.character(Age)))) %>%
+  pull(avg_age)
+# ----
+
+
+
