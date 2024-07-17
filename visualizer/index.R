@@ -1,4 +1,7 @@
 main <- function(libPaths = .libPaths(), rDir = "visualizer/", entry = "index.R", outputDir = "./") {
+  # print version
+  print(R.version)
+
   # add user library path (not loaded when called from nodeJS)
   .libPaths(libPaths)
 
