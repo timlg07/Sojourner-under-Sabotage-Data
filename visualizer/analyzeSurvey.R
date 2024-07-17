@@ -1,0 +1,71 @@
+library(ggstats)
+library(ggplot2)
+library(dplyr)
+library(purrr)
+library(reshape2)
+
+if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+
+survey <- read.csv("./visualizer/survey.csv") %>%
+  select(courseOfStudy = What.is.your.course.of.study., everything())
+
+# ---- PLOT --- Course of study ----
+course_of_study <- survey %>%
+  filter(courseOfStudy != "") %>%
+  group_by(courseOfStudy) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  mutate(courseOfStudy = factor(courseOfStudy, levels = courseOfStudy)) %>%
+  mutate(percentage = n / sum(n) * 100) %>%
+  mutate(courseOfStudy = paste0(courseOfStudy, " (", round(percentage, 0), " %)"))
+ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n)) +
+  geom_bar(stat = "identity") +
+  coord_polar("y", start = 0, clip = "on") +
+  labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Course of study") +
+  theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
+  geom_text(aes(label = ifelse(percentage > 5, paste(round(percentage, 0), "%"), '')), position = position_stack(vjust = 0.5), color = "white") +
+  scale_fill_manual(values = c("#00d070", "#ff9e49", "#579ad6", "#f0e442", "#0072b2", "#d55e00", "#cc79a7"))
+ggsave(filename = paste0(outputDir, "course_of_study.png"), width = 12, height = 6)
+# ----
+
+# ---- PLOT --- Gender ------------
+gender <- survey %>%
+  group_by(Gender) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  mutate(Gender = factor(Gender, levels = Gender)) %>%
+  mutate(percentage = n / sum(n) * 100) %>%
+  mutate(Gender = paste0(Gender, " (", round(percentage, 0), " %)"))
+ggplot(data = gender, aes(x = "", fill = Gender, y = n)) +
+  geom_bar(stat = "identity") +
+  coord_polar("y", start = 0, clip = "on") +
+  labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Gender") +
+  theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "#444444") +
+  scale_fill_manual(values = c("pink", "lightblue"))
+ggsave(filename = paste0(outputDir, "gender.png"), width = 12, height = 6)
+# ----
+
+# ---- PLOT --- Experience with Java ------------
+# likert plots of Experience.with.Java
+experience <- survey %>%
+  select(Java = "Experience.with.Java", Programming = "Experience.with.programming..any.language.")
+likert_levels_experience <- experience %>%
+    pull(Java) %>%
+    unique()
+experience <- experience %>%
+  mutate(across(everything(), ~factor(.x, levels = likert_levels_experience)))
+gglikert(experience)
+# ----
+
+# ---- PLOT --- other likert plots ------------
+likert_levels_all <- survey %>%
+  select(ex = "Please.specify.your.level.of.agreement...Debugging.got.easier.from.room.to.room.") %>%
+  pull(ex) %>%
+  unique()
+all <- survey %>%
+  select(starts_with("Please.specify.your.level.of.agreement")) %>%
+  rename_with(~gsub("Please\\.specify\\.your\\.level\\.of\\.agreement\\.+", "", .x)) %>%
+  rename_with(~gsub("\\.", " ", .x)) %>%
+  mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
+gglikert(all)
