@@ -20,12 +20,10 @@ avg_per_user <- time %>%
 
 users <- nrow(avg_per_user)
 avg_per_component_melted <- melt(avg_per_component, id = "componentName")
-plot <- ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
+ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
   geom_line() +
   labs(title = paste0("Average time until activation per user & component (total users: ", users, ")"), x = "Component", y = "Average time", fill = "Type", group = "Type")
-plot
-
-ggsave(filename = paste0(outputDir, "timeUntilActivation_avg_per_component.png"), plot, width = 10, height = 5)
+ggsave(filename = paste0(outputDir, "timeUntilActivation_avg_per_component.png"), width = 10, height = 5)
 
 
 level_reached <- fromJSON(txt = "./visualizer/r_json/levelReached_r.json", flatten = TRUE)
@@ -45,14 +43,13 @@ avg_per_component_only_users_that_reached_level4_total <- time %>%
   group_by(componentName) %>%
   summarise(avg_time = mean(value))
 
-plot <- ggplot(data = avg_per_component_only_users_that_reached_level4, aes(x = componentName, y = avg_time, group = 1)) +
+ggplot(data = avg_per_component_only_users_that_reached_level4, aes(x = componentName, y = avg_time, group = 1)) +
   geom_line() +
   # geom_bar(stat = "identity", fill = "blue", color = "blue", alpha = .5, data = avg_per_component_only_users_that_reached_level4_total, aes(x = componentName, y = avg_total, color = "blue")) +
   labs(title = paste0("Average time per user & component for the ", amount_of_users_that_reached_level4, " users that reached level 4"),
        x = "Component", y = "Average time", fill = "Type", group = "Type") +
   expand_limits(y = 0)
-plot
-ggsave(filename = paste0(outputDir, "timeUntilActivation_avg_per_component_only_users_that_reached_level4.png"), plot, width = 10, height = 5)
+ggsave(filename = paste0(outputDir, "timeUntilActivation_avg_per_component_only_users_that_reached_level4.png"), width = 10, height = 5)
 
 
 # create contingency table of observed values
@@ -68,7 +65,10 @@ component_name_to_index <- function(component_name) {
 
 nn <- time %>%
   filter(user %in% users_that_reached_level4$user) %>%
-  filter(componentName != "ReactorLog")
+  filter(componentName != "ReactorLog") %>%
+  # only keep users that have data for all components present
+  group_by(user) %>%
+  filter(n() == 4)
 
 m <- nn %>%
   mutate(componentIndex = sapply(componentName, component_name_to_index)) %>%
@@ -87,14 +87,13 @@ summary(result)
 #ggpubr::ggballoonplot(as.data.frame(result$result))
 
 
-plot <- ggplot(data = m, aes(x = componentIndex, y = value)) +
-  #geom_boxplot(aes(x = componentName), alpha = 0.25, color = "gray") +
+ggplot(data = m, aes(x = componentIndex, y = value)) +
+  geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
   labs(title = "time per component for users that reached level 4", x = "Component", y = "time in min") +
   geom_point() +
   geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red") +
   expand_limits(y = 0)
-plot
-ggsave(filename = paste0(outputDir, "timeUntilActivation_boxplot.png"), plot, width = 10, height = 8)
+ggsave(filename = paste0(outputDir, "time_until_activation_trend.png"), width = 10, height = 8)
 
 res <- lm(m$value ~ m$componentIndex)
 

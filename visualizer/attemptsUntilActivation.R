@@ -99,7 +99,16 @@ component_name_to_index <- function(component_name) {
 
 nnn <- attempts %>%
   filter(user %in% users_that_reached_level4$user) %>%
-  filter(componentName != "ReactorLog")
+  filter(componentName != "ReactorLog") %>%
+  # only keep users that have data for all components present
+  group_by(user) %>%
+  filter(n() == 4)
+
+data_users_count <- nnn %>%
+  group_by(componentName) %>%
+  summarise(c = n()) %>%
+  pull(c) %>%
+  unique()
 
 nn <- nnn %>%
   group_by(user, componentName) %>%
@@ -123,12 +132,12 @@ summary(result)
 
 
 plot <- ggplot(data = m, aes(x = componentIndex, y = total)) +
-  #geom_boxplot(aes(x = componentName), alpha = 0.25, color = "gray") +
+  geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
   labs(title = "Attempts per component for users that reached level 4", x = "Component", y = "Attempts") +
   geom_point() +
   geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red")
 plot
-ggsave(filename = paste0(outputDir, "attemptsUntilActivation_boxplot.png"), plot, width = 10, height = 8)
+ggsave(filename = paste0(outputDir, "attempts_until_activation_trend.png"), plot, width = 10, height = 8)
 
 res <- lm(m$total ~ m$componentIndex)
 
@@ -139,8 +148,7 @@ summary_model <- summary(model)
 slope <- summary_model$coefficients["componentIndex", "Estimate"]
 p_value <- summary_model$coefficients["componentIndex", "Pr(>|t|)"]
 # Check if the slope is negative and the p-value is significant
-p_value
-slope
+print(paste0("Slope: ", slope, ", p-value: ", p_value))
 if (slope < 0 && p_value < 0.05) {
   print("There is a significant downward linear trend.")
 } else {
