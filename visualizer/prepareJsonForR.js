@@ -8,6 +8,7 @@ const filesToFlatten2 = [
     'timeUntilFirstPass',
     'attemptsUntilFixed_summary',
     'destroyedOrAlarm',
+    'coverageAtActivation',
 ];
 const filesToFlatten = [
     'levelReached',
