@@ -38,10 +38,11 @@ ggsave(filename = paste0(outputDir, "coverage_vs_destroyed_or_alarm_per_componen
 cov_and_result <- destroyed_or_alarm
 cov_and_result$destroyed <- ifelse(cov_and_result$value == "destroyed", 1, 0)
 cov_and_result$alarm <- ifelse(cov_and_result$value == "alarm", 1, 0)
-cov_and_result <- cov_and_result[, c("user", "destroyed", "alarm")]
-cov_and_result <- inner_join(coverage, cov_and_result, by = "user") %>%
+cov_and_result <- cov_and_result[, c("user", "destroyed", "alarm")] %>%
   group_by(user) %>%
-  summarise(destroyed = sum(destroyed), alarm = sum(alarm), fraction = mean(fraction))
+  summarise(destroyed = sum(destroyed), alarm = sum(alarm))
+coverage_per_player <- coverage %>% group_by(user) %>% summarise(fraction = mean(fraction))
+cov_and_result <- inner_join(coverage_per_player, cov_and_result, by = "user")
 
 ggplot(data = cov_and_result, aes()) +
   theme_minimal() +
