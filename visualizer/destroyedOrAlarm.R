@@ -81,9 +81,9 @@ time_and_results <- inner_join(time_spent_testing, time_and_results, by = "user"
 
 ggplot(data = time_and_results, aes(x = total_time, y = destroyed, color = "Destroyed")) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE, color = "red", formula = y ~ x) +
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
   geom_point(aes(x = total_time, y = alarm, color = "Alarm")) +
-  geom_smooth(aes(x = total_time, y = alarm), method = "lm", se = FALSE, color = "blue", formula = y ~ x) +
+  geom_smooth(aes(x = total_time, y = alarm, color = "Alarm"), method = "lm", se = FALSE, formula = y ~ x) +
   labs(title = "Total time spent testing vs. amount of destroyed or alarm events", x = "Time spent in minutes", y = "Amount of events", color = "Result") +
   scale_color_manual(values = c( "blue","red"), labels = c("Alarm","Destroyed"))
 ggsave(filename = paste0(outputDir, "time_spent_testing_vs_destroyed_or_alarm.png"), width = 10, height = 5)
