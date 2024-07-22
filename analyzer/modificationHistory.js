@@ -32,6 +32,15 @@ const modificationHistory = Object.entries(attemptsUntilFixed).reduce((acc, [use
 
 save('../modificationHistory_full.json', modificationHistory);
 
+const modificationHistoryFormatted = Object.entries(modificationHistory).reduce((acc, [user, item]) => {
+    acc[user] = Object.entries(item).reduce((acc, [component, item]) => {
+        acc[component] = item.map(({timestamp, src}) => ({timestamp, src: src.split('\n')}));
+        return acc;
+    }, {});
+    return acc;
+}, {});
+
+save('../modificationHistory_formatted.json', modificationHistoryFormatted);
 
 const parseAndPrettifyPatch = (patch) => {
     const dmp = new DiffMatchPatch();
