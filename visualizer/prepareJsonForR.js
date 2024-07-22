@@ -9,7 +9,8 @@ const filesToFlatten2 = [
     'attemptsUntilFixed_summary',
     'destroyedOrAlarm',
     'coverageAtActivation',
-    'amountOfTestMethods'
+    'amountOfTestMethods',
+    'printsAddedPerComponent',
 ];
 const filesToFlatten = [
     'levelReached',
