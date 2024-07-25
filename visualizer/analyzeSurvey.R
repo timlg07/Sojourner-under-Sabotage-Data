@@ -20,9 +20,9 @@ course_of_study <- survey %>%
   mutate(courseOfStudy = paste0(formatC(100 - round(percentage, 0), 2, flag = '0'), "__", # just there for the ordering
                                 courseOfStudy, " (", round(percentage, 0), " %)")) # actual name
 ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n)) +
+  theme_minimal() +
   geom_bar(stat = "identity") +
   coord_polar("y", start = 0, clip = "on") +
-  theme_minimal() +
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Course of study") +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
   geom_text(aes(label = ifelse(percentage > 5, paste(round(percentage, 0), "%"), '')), position = position_stack(vjust = 0.5), color = "white") +
@@ -45,9 +45,9 @@ gender <- survey %>%
   mutate(percentage = n / sum(n) * 100) %>%
   mutate(.gender = paste0(Gender, " (", round(percentage, 0), " %)"))
 ggplot(data = gender, aes(x = "", fill = Gender, y = n)) +
+  theme_minimal() +
   geom_bar(stat = "identity") +
   coord_polar("y", start = 0, clip = "on") +
-  theme_minimal() +
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Gender") +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
   geom_text(aes(label = paste0(Gender, "\n", round(percentage, 0), " %  (", n, ")")), position = position_stack(vjust = 0.5), color = "#444444") +
@@ -76,8 +76,8 @@ gglikert(experience) +
 ggsave(filename = paste0(outputDir, "experience_with_programming_likert.png"), width = 10, height = 3)
 # as bar chart
 ggplot(experience, aes(y = Java)) +
-  geom_bar(width = .5) +
   theme_minimal() +
+  geom_bar(width = .5) +
   labs(title = "Experience with Java", y = "Experience", x = "Players")
 ggsave(filename = paste0(outputDir, "experience_with_programming_bar.png"), width = 10, height = 3)
 # ----

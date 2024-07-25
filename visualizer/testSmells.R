@@ -48,6 +48,7 @@ smells_melted_by_component_mean <- smells_melted %>%
 plot_smells <- function(data) {
   return(
     ggplot(data = data, aes(x = componentName, y = value, fill = variable, group = variable)) +
+      theme_minimal() +
       geom_bar(stat = "identity", position = "stack") +
       labs(x = "Component", y = "Amount of Test Smells", fill = "Test Smell Type") +
       geom_text(aes(label = ifelse(percentage >= 2 & value > 1,

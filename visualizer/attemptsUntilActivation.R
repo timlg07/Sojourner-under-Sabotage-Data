@@ -42,6 +42,7 @@ ggplot(data = avg_per_component, aes(x = componentName, group = 1)) +
 users <- nrow(avg_per_user)
 avg_per_component_melted <- melt(avg_per_component, id = c("componentName", "total"))
 ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
+  theme_minimal() +
   geom_area(position = "stack") +
   scale_fill_manual(values = c("red", "orange", "green"), labels = c("Errors", "Fails", "Successes")) +
   labs(title = paste0("Average errors, fails and successes per user & component (total users: ", users, ")"), x = "Component", y = "Average attempts", fill = "Type", group = "Type")
@@ -49,13 +50,15 @@ ggsave(filename = paste0(outputDir, "attemptsUntilActivation_avg_per_component.p
 
 # same plot, but stretched to percentages
 ggplot(data = avg_per_component_melted, aes(x = componentName, group = variable, y = value / total)) +
+  theme_minimal() +
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
-  labs(title = "Average errors, fails and successes of test run attempts per component", x = "Component", y = "Average", fill = "Result") +
+  labs(#title = "Average errors, fails and successes of test run attempts per component",
+       x = "Component", y = "Average", fill = "Result") +
   scale_fill_manual(values = c("red", "orange", "green"), labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
-  geom_text(aes(label = ifelse(value > 0, round(value, 1), '')), position = position_stack(vjust = 0.5), size = 3)
+  geom_text(aes(label = ifelse(value > 0, paste0(round(value / total * 100, 0), " %\n(", round(value, 1), ")"), '')), position = position_stack(vjust = 0.5), size = 3)
 ggsave(filename = paste0(outputDir, "attempts_until_activation_avg_per_component_percentages.png"), width = 8, height = 5)
 
 level_reached <- fromJSON(txt = "./visualizer/r_json/levelReached_r.json", flatten = TRUE)
@@ -77,6 +80,7 @@ avg_per_component_only_users_that_reached_level4_total <- attempts %>%
   summarise(avg_total = mean(errors + fails + successes))
 
 plot <- ggplot(data = avg_per_component_only_users_that_reached_level4_melted, aes(x = componentName)) +
+  theme_minimal() +
   geom_area(position = "stack", aes(y = value, fill = variable, group = variable)) +
   scale_fill_manual(values = c("red", "orange", "green"), labels = c("Errors", "Fails", "Successes")) +
   # geom_bar(stat = "identity", fill = "blue", color = "blue", alpha = .5, data = avg_per_component_only_users_that_reached_level4_total, aes(x = componentName, y = avg_total, color = "blue")) +
@@ -132,10 +136,12 @@ summary(result)
 
 
 plot <- ggplot(data = m, aes(x = componentIndex, y = total)) +
+  theme_minimal() +
   geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
-  labs(title = "Attempts per component for users that reached level 4", x = "Component", y = "Attempts") +
+  labs(#title = "Attempts per component for users that reached level 4",
+       x = "Component", y = "Attempts") +
   geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red")
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")
 plot
 ggsave(filename = paste0(outputDir, "attempts_until_activation_trend.png"), plot, width = 10, height = 8)
 
@@ -159,8 +165,8 @@ nnn_melted <- melt(nnn, id = c("user", "componentName"))
 ggplot(data = nnn_melted, aes(x = componentName, y = value, color = variable, group = interaction(componentName, variable))) +
   geom_boxplot(width = .5) +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x, aes(group = variable), linetype = "dashed", size = .5) +
-  labs(title = "Attempts per component for users that reached level 4", x = "Component", y = "Attempts",
-       fill = "Type of metric", group = "Type of metric") +
+  labs(#title = "Attempts per component for users that reached level 4",
+       x = "Component", y = "Attempts", fill = "Type of metric", group = "Type of metric") +
   scale_color_manual(values = c("red", "blue", "orange"), labels = c("Errors", "Fails", "Successes")) +
   scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 100, 2)), breaks = seq(0, 100, 2))
 

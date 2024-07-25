@@ -17,8 +17,10 @@ for (i in seq_len(nrow(level_reached_amount))) {
 }
 
 plot <- ggplot(level_reached_amount, aes(x = value, y = count)) +
+  theme_minimal() +
   geom_bar(stat = "identity") +
-  labs(title = "highest level reached by players", x = "Level", y = "Amount of players") +
+  labs(#title = "highest level reached by players",
+       x = "Level", y = "Amount of players") +
   geom_text(aes(label = count), vjust = -0.5, size = 3)
 plot
 ggsave(paste0(outputDir, "level_reached.png"), plot, width = 15, height = 10, units = "cm", dpi = 300, limitsize = FALSE, device = "png")

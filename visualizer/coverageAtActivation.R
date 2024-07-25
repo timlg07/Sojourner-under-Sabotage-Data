@@ -16,6 +16,7 @@ destroyed_or_alarm <- fromJSON(txt = "./visualizer/r_json/destroyedOrAlarm_r.jso
 
 ## -- Visualize coverage alone -------------------
 ggplot(data = coverage, aes(x = componentName, y = fraction)) +
+  theme_minimal() +
   geom_violin() +
   labs(x = "Component", y = "Coverage at activation")
 ggsave(filename = paste0(outputDir, "coverage_at_activation.png"), width = 12, height = 8)
@@ -26,6 +27,7 @@ cov_vs_doa <- merge(coverage, destroyed_or_alarm, by = c("user", "componentName"
   select(user, componentName, coverage = fraction, result = value)
 
 ggplot(data = cov_vs_doa %>% filter(componentName != "Kitchen"), aes(x = interaction(componentName, result), y = coverage)) +
+  theme_minimal() +
   geom_violin(aes(fill = result), alpha = .5) +
   #geom_boxplot(width = .15, alpha = .25, fill = "white", color = "white") +
   geom_point(position = position_jitter(width = 0.08, height = 0), fill = "transparent", color = "black", pch = 21, size = 3) +
@@ -41,18 +43,22 @@ cov_and_result$alarm <- ifelse(cov_and_result$value == "alarm", 1, 0)
 cov_and_result <- cov_and_result[, c("user", "destroyed", "alarm")] %>%
   group_by(user) %>%
   summarise(destroyed = sum(destroyed), alarm = sum(alarm))
-coverage_per_player <- coverage %>% group_by(user) %>% summarise(fraction = mean(fraction))
+coverage_per_player <- coverage %>%
+  group_by(user) %>%
+  summarise(fraction = mean(fraction))
 cov_and_result <- inner_join(coverage_per_player, cov_and_result, by = "user")
 
+
+set.seed(42)
 ggplot(data = cov_and_result, aes()) +
   theme_minimal() +
-  geom_point(aes(x = fraction, y = destroyed,color = "Destroyed"),pch=20,alpha=.25, size=6, position = position_jitter(width = 0, height = 0.05)) +
+  geom_point(aes(x = fraction, y = destroyed, color = "Destroyed"), pch = 20, alpha = .25, size = 6, position = position_jitter(width = 0, height = 0.05)) +
   geom_smooth(aes(x = fraction, y = destroyed, color = "Destroyed"), method = "lm", se = FALSE, formula = y ~ x) +
-  geom_point(aes(x = fraction, y = alarm, color = "Alarm"),pch=20,alpha=.25, size=6, position = position_jitter(width = 0, height = 0.05)) +
+  geom_point(aes(x = fraction, y = alarm, color = "Alarm"), pch = 20, alpha = .25, size = 6, position = position_jitter(width = 0, height = 0.05)) +
   geom_smooth(aes(x = fraction, y = alarm, color = "Alarm"), method = "lm", se = FALSE, formula = y ~ x) +
   labs(x = "Test coverage", y = "Amount of events", color = "Result") +
   scale_color_manual(values = c("blue", "red"), labels = c("Alarm", "Destroyed")) +
-    scale_y_continuous(breaks = seq(0, 13, 1), minor_breaks = numeric(0))
+  scale_y_continuous(breaks = seq(0, 13, 1), minor_breaks = numeric(0))
 ggsave(filename = paste0(outputDir, "coverage_vs_destroyed_or_alarm_regression.png"), width = 12, height = 8)
 
 d <- lm(destroyed ~ fraction, data = cov_and_result)

@@ -22,8 +22,10 @@ avg_per_user <- time %>%
 users <- nrow(avg_per_user)
 avg_per_component_melted <- melt(avg_per_component, id = "componentName")
 ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
+  theme_minimal() +
   geom_line() +
-  labs(title = paste0("Average time until activation per user & component (total users: ", users, ")"), x = "Component", y = "Average time", fill = "Type", group = "Type")
+  labs(#title = paste0("Average time until activation per user & component (total users: ", users, ")"),
+       x = "Component", y = "Average time", fill = "Type", group = "Type")
 ggsave(filename = paste0(outputDir, "timeUntilFirstPass_avg_per_component.png"), width = 10, height = 5)
 
 
@@ -45,9 +47,10 @@ avg_per_component_only_users_that_reached_level4_total <- time %>%
   summarise(avg_time = mean(value))
 
 ggplot(data = avg_per_component_only_users_that_reached_level4, aes(x = componentName, y = avg_time, group = 1)) +
+  theme_minimal() +
   geom_line() +
   # geom_bar(stat = "identity", fill = "blue", color = "blue", alpha = .5, data = avg_per_component_only_users_that_reached_level4_total, aes(x = componentName, y = avg_total, color = "blue")) +
-  labs(title = paste0("Average time per user & component for the ", amount_of_users_that_reached_level4, " users that reached level 4"),
+  labs(#title = paste0("Average time per user & component for the ", amount_of_users_that_reached_level4, " users that reached level 4"),
        x = "Component", y = "Average time", fill = "Type", group = "Type") +
   expand_limits(y = 0)
 ggsave(filename = paste0(outputDir, "timeUntilFirstPass_avg_per_component_only_users_that_reached_level4.png"), width = 10, height = 5)
@@ -99,11 +102,13 @@ plot <- ggplot(data = time, aes(x = componentName, y = value)) +
 plot
 
 ggplot(data = m, aes(x = componentIndex, y = value)) +
+  theme_minimal() +
   geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
   #geom_violin(aes(x = componentName), alpha = .25) +
-  labs(title = "time per component for the 12 users with data on all of the first four levels", x = "Component", y = "time in min") +
+  labs(#title = "time per component for the 12 users with data on all of the first four levels",
+       x = "Component", y = "time in min") +
   geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red", aes(x = componentIndex)) + #linetype = "dashed"
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red", aes(x = componentIndex)) + #linetype = "dashed"
   # geom_smooth(se = FALSE, color = "blue", aes(x = componentIndex)) +
   expand_limits(y = 0)
 ggsave(filename = paste0(outputDir, "time_until_first_pass_trend.png"), width = 10, height = 8)

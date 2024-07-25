@@ -39,6 +39,7 @@ ggplot(data = avg_per_component, aes(x = componentName, group = 1)) +
 users <- nrow(avg_per_user)
 avg_per_component_melted <- melt(avg_per_component, id = "componentName")
 ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
+  theme_minimal() +
   geom_area(position = "stack") +
   scale_fill_manual(values = c("red", "orange"), labels = c("Errors", "Fails")) +
   labs(title = paste0("Average errors & fails per user & component (total users: ", users, ")"), x = "Component", y = "Average attempts", fill = "Type", group = "Type")
@@ -64,6 +65,7 @@ avg_per_component_only_users_that_reached_level4_total <- attempts %>%
   summarise(avg_total = mean(errors + fails))
 
 ggplot(data = avg_per_component_only_users_that_reached_level4_melted, aes(x = componentName)) +
+  theme_minimal() +
   geom_area(position = "stack", aes(y = value, fill = variable, group = variable)) +
   scale_fill_manual(values = c("red", "orange"), labels = c("Errors", "Fails")) +
   # geom_bar(stat = "identity", fill = "blue", color = "blue", alpha = .5, data = avg_per_component_only_users_that_reached_level4_total, aes(x = componentName, y = avg_total, color = "blue")) +
@@ -118,10 +120,12 @@ print(paste0("Chi-Square test p-value: ", result$p.value))
 
 
 ggplot(data = m, aes(x = componentIndex, y = total)) +
+  theme_minimal() +
   geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
-  labs(title = "Attempts per component for the 12 users with data on all first 4 levels", x = "Component", y = "Attempts") +
+  labs(#title = "Attempts per component for the 12 users with data on all first 4 levels",
+       x = "Component", y = "Attempts") +
   geom_point(aes(x = componentName)) +
-  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red")
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")
 ggsave(filename = paste0(outputDir, "attempts_until_first_pass_trend.png"), width = 10, height = 8)
 
 model <- lm(total ~ componentIndex, data = m)

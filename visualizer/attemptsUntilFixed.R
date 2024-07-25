@@ -20,9 +20,10 @@ debugging_per_component <- debugging %>%
 debugging_per_component_melted <- melt(debugging_per_component, id = "componentName")
 
 ggplot(data = debugging_per_component_melted, aes(x = componentName, group = variable, y = value)) +
+  theme_minimal() +
   geom_line(aes(color = variable)) +
   geom_point(aes(color = variable)) +
-  labs(title = "Average time, amount of modifications, executions and hidden tests added until the component was fixed",
+  labs(#title = "Average time, amount of modifications, executions and hidden tests added until the component was fixed",
        x = "Component", y = "Average time spent debugging in minutes", color = "Type of metric") +
   scale_color_manual(values = c("red", "orange", "green", "blue"), labels = c("Time", "Modifications", "Executions", "Hidden tests added")) +
   scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 10, 1)), breaks = seq(0, 10, 1))
@@ -39,12 +40,13 @@ totals <- debugging %>%
 debugging_melted <- melt(debugging, id = c("componentName", "user")) %>%
   filter(variable != "executions")
 ggplot(data = debugging_melted, aes(x = componentName, y = value, color = variable, group = interaction(componentName, variable))) +
+  theme_minimal() +
   #geom_violin() +
   geom_boxplot(width = .5) +
-  geom_smooth(method = "loess", se = FALSE, formula = y ~ x, aes(group = variable), linetype = "dashed", size = .5) +
+  #geom_smooth(method = "loess",se = FALSE, formula = y ~ x, aes(group = variable), linetype = "dashed", size = .5) +
   #geom_point()+
-  labs(title = "Time spent debugging per component", x = "Component", y = "Time spent in minutes",
-       fill = "Type of metric", group = "Type of metric") +
+  labs(#title = "Time spent debugging per component",
+       x = "Component", y = "Time spent in minutes", fill = "Type of metric", group = "Type of metric") +
   scale_color_manual(values = c("red", "blue", "orange"), labels = c("Time", "Modifications", "Hidden tests added")) +
   scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 100, 2)), breaks = seq(0, 100, 2))
 ggsave(filename = paste0(outputDir, "debugging_performance_per_component_boxplots.png"), width = 12, height = 8)

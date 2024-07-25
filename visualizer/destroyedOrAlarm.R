@@ -28,8 +28,10 @@ percentages <- merge(sums, counts, by = c("componentName", "value")) %>%
   mutate(type = ifelse(type == "destroyed", "1 Destroyed", "2 Alarm"))
 
 ggplot(data = percentages, aes(x = componentName, y = percentage, fill = type)) +
+  theme_minimal() +
   geom_bar(stat = "identity", position = "stack") +
-  labs(title = "Percentage of destroyed or alarm events per component", x = "Component", y = "Percentage", fill = "Result") +
+  labs(#title = "Percentage of destroyed or alarm events per component",
+       x = "Component", y = "Percentage", fill = "Result") +
   scale_fill_manual(values = c("grey", "#00d070"), labels = c("Destroyed", "Alarm")) +
   geom_text(aes(label = count), size = 3, position = position_stack(vjust = .5))
 ggsave(filename = paste0(outputDir, "destroyed_or_alarm_percentage.png"), width = 10, height = 5)
@@ -80,11 +82,13 @@ time_and_results <- time_and_results[, c("user", "destroyed", "alarm")] %>%
 time_and_results <- inner_join(time_spent_testing, time_and_results, by = "user")
 
 ggplot(data = time_and_results, aes(x = total_time, y = destroyed, color = "Destroyed")) +
+  theme_minimal() +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
   geom_point(aes(x = total_time, y = alarm, color = "Alarm")) +
   geom_smooth(aes(x = total_time, y = alarm, color = "Alarm"), method = "lm", se = FALSE, formula = y ~ x) +
-  labs(title = "Total time spent testing vs. amount of destroyed or alarm events", x = "Time spent in minutes", y = "Amount of events", color = "Result") +
+  labs(#title = "Total time spent testing vs. amount of destroyed or alarm events",
+         x = "Time spent in minutes", y = "Amount of events", color = "Result") +
   scale_color_manual(values = c( "blue","red"), labels = c("Alarm","Destroyed"))
 ggsave(filename = paste0(outputDir, "time_spent_testing_vs_destroyed_or_alarm.png"), width = 10, height = 5)
 
