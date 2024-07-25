@@ -43,14 +43,14 @@ gender <- survey %>%
   arrange(desc(n)) %>%
   mutate(Gender = factor(Gender, levels = Gender)) %>%
   mutate(percentage = n / sum(n) * 100) %>%
-  mutate(Gender = paste0(Gender, " (", round(percentage, 0), " %)"))
+  mutate(.gender = paste0(Gender, " (", round(percentage, 0), " %)"))
 ggplot(data = gender, aes(x = "", fill = Gender, y = n)) +
   geom_bar(stat = "identity") +
   coord_polar("y", start = 0, clip = "on") +
   theme_minimal() +
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Gender") +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
-  geom_text(aes(label = n), position = position_stack(vjust = 0.5), color = "#444444") +
+  geom_text(aes(label = paste0(Gender, "\n", round(percentage, 0), " %  (", n, ")")), position = position_stack(vjust = 0.5), color = "#444444") +
   scale_fill_manual(values = c("pink", "lightblue"))
 ggsave(filename = paste0(outputDir, "gender.png"), width = 6, height = 4)
 # ----
