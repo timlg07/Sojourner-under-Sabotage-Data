@@ -29,6 +29,9 @@ ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n)) +
   scale_fill_manual(values = c("#1f77b4", "#2ca02c", "#ff7f0e", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"),
                     labels = course_of_study %>% # remove order prefix
                       mutate(courseOfStudy = gsub("\\d+__", '', courseOfStudy)) %>%
+                      mutate(courseOfStudy = gsub("Informatik", 'Computer Science', courseOfStudy)) %>%
+                      mutate(courseOfStudy = gsub("Wirtschaftsinformatik", 'Business Informatics', courseOfStudy)) %>%
+                      mutate(courseOfStudy = gsub("Lehramt", 'Education', courseOfStudy)) %>%
                       pull(courseOfStudy))
 ggsave(filename = paste0(outputDir, "course_of_study.png"), width = 6, height = 4)
 # ----
