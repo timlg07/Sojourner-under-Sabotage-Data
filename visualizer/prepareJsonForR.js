@@ -11,6 +11,7 @@ const filesToFlatten2 = [
     'coverageAtActivation',
     'amountOfTestMethods',
     'printsAddedPerComponent',
+    'testSmellDetectorOutput',
 ];
 const filesToFlatten = [
     'levelReached',
