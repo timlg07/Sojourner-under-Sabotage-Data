@@ -83,15 +83,20 @@ ggsave(filename = paste0(outputDir, "experience_with_programming_bar.png"), widt
 # ----
 
 # ---- PLOT --- other likert plots ------------
-likert_levels_all <- survey %>%
-  select(ex = "Please.specify.your.level.of.agreement...Debugging.got.easier.from.room.to.room.") %>%
-  pull(ex) %>%
-  unique()
+likert_levels_all <- c(
+  "Fully disagree",
+  "Partially disagree",
+  "Neither agree nor disagree",
+  "Partially agree",
+  "Fully agree"
+)
 all <- survey %>%
   select(starts_with("Please.specify.your.level.of.agreement")) %>%
   rename_with(~gsub("Please\\.specify\\.your\\.level\\.of\\.agreement\\.+", "", .x)) %>%
   rename_with(~gsub("\\.", " ", .x)) %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
+  # add numbers to all questions
+colnames(all) <- sprintf("(Q%02d) %s", seq(1, 14), colnames(all))
 gglikert(all)
 ggsave(filename = paste0(outputDir, "likert_plots.png"), width = 9, height = 9)
 # ----
