@@ -93,7 +93,8 @@ likert_levels_all <- c(
 all <- survey %>%
   select(starts_with("Please.specify.your.level.of.agreement")) %>%
   rename_with(~gsub("Please\\.specify\\.your\\.level\\.of\\.agreement\\.+", "", .x)) %>%
-  rename_with(~gsub("\\.", " ", .x)) %>%
+  rename_with(~gsub("\\.+", " ", .x)) %>%
+  rename_with(~gsub("learned practised", "learned/practised", .x)) %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
   # add numbers to all questions
 colnames(all) <- sprintf("(Q%02d) %s", seq(1, 14), colnames(all))
