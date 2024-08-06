@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 ## -- Load data ---------------------------------
 smells <- fromJSON(txt = "./visualizer/r_json/testSmellDetectorOutput_r.json", flatten = TRUE)
@@ -54,26 +57,35 @@ plot_smells <- function(data) {
       geom_text(aes(label = ifelse(percentage >= 2 & value > 1,
                                    paste0(round(percentage, 0), "% (", round(value, 0), ")"),
                                    '')),
-                size = 3, position = position_stack(vjust = .5))
+                size = 3, position = position_stack(vjust = .5)) +
+      scale_fill_manual(values = colors[-c(5, 6, 7)])
   )
 }
 
-plot_smells(smells_melted_by_component_total)
+plot <- plot_smells(smells_melted_by_component_total)
+plot
 ggsave(paste0(outputDir, "test_smells_per_component.png"), width = 10, height = 5)
+plot_dark <- plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
+ggsave(paste0(presentationDir, "test_smells_per_component_dark.png"), plot_dark, width = 10, height = 5)
 plot_smells(smells_melted_by_component_mean)
 
 # pie chart
-ggplot(data = smells_melted_total, aes(x = "", y = value, fill = variable)) +
+plot <- ggplot(data = smells_melted_total, aes(x = "", y = value, fill = variable)) +
   theme_minimal() +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
   geom_bar(stat = "identity") +
   coord_polar("y") +
-  geom_text(aes(label = ifelse(percentage > 6,
+  geom_text(aes(label = ifelse(percentage > 8,
                                paste0(variable, "\n", round(percentage, 0), "%", "  (", value, ")"),
                                '')),
-            position = position_stack(vjust = .5)) +
-  labs(x = "", y = "", fill = "Test Smell Type")
+            position = position_stack(vjust = .5), color = "black") +
+  labs(x = "", y = "", fill = "Test Smell Type") +
+  # all colors except 5, 6, 7
+  scale_fill_manual(values = colors[-c(5, 6, 7)])
+plot
 ggsave(paste0(outputDir, "test_smells_total_pie.png"), width = 6, height = 4)
+plot_dark <- plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA), panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank())
+ggsave(paste0(presentationDir, "test_smells_total_pie_dark.png"), plot_dark, width = 7, height = 5)
 
 
 smells_melted_by_user <- smells_melted %>%
@@ -111,3 +123,5 @@ total_amount_of_smells <- smells_melted_total %>%
 amount_of_test_methods_per_component <- smells %>%
   group_by(componentName) %>%
   summarise(avg_per_user = mean(NumberOfMethods), total = sum(NumberOfMethods))
+
+smells_per_method <- total_amount_of_smells / amount_of_test_methods_per_component$total %>% sum()
