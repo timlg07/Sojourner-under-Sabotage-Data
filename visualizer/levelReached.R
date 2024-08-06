@@ -24,7 +24,7 @@ plot <- ggplot(level_reached_amount, aes(x = value, y = count)) +
   theme_minimal() +
   geom_bar(stat = "identity", fill = "#B8A0F8") +
   labs(#title = "highest level reached by players",
-       x = NULL, y = "Amount of players") +
+       x = element_blank(), y = "Amount of players") +
   geom_text(aes(label = count), vjust = -0.5, size = 3)
 plot
 ggsave(paste0(outputDir, "level_reached.png"), plot, width = 15, height = 10, units = "cm", dpi = 300, limitsize = FALSE, device = "png")
@@ -33,7 +33,7 @@ plot <- ggplot(level_played_by, aes(x = value, y = count)) +
   theme_minimal() +
   geom_bar(stat = "identity", fill = "#B8A0F8") +
   labs(#title = "amount of players that played level x",
-       x = NULL, y = "Amount of players") +
+       x = element_blank(), y = "Amount of players") +
   geom_text(aes(label = count), vjust = 1.5, size = 3, color = "white")
 plot
 ggsave(paste0(outputDir, "level_played_by.png"), plot, width = 15, height = 11, units = "cm", dpi = 300, limitsize = FALSE, device = "png")

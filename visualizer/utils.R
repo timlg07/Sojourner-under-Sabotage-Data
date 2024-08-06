@@ -11,5 +11,13 @@ levelNumbers <- function (d) {
   }
   return(d_numbered)
 }
-# paletteer_d("vapoRwave::jazzCup") -> #83DDE0FF #28ADA8FF #3F86BCFF #7A3A9AFF #392682FF
-colors <- c("#B8A0F8", "#83DDE0FF", "#28ADA8FF", "#3F86BCFF", "#7A3A9AFF", "#392682FF")
+
+colors <- c(
+  "#B8A0F8FF", # theme color
+  "#83DDE0FF", "#28ADA8FF", "#3F86BCFF", "#7A3A9AFF", "#392682FF", # paletteer_d("vapoRwave::jazzCup")
+  "#AD282DFF", # complementary of 3
+  "#639ECBFF", # monochromatic of 4
+  "#37D1CBFF", # monochromatic of 3
+  "#E0F8A0FF", # complementary of 1
+  "#9470F5FF", # monochromatic of 0
+)

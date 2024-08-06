@@ -34,7 +34,7 @@ plot <- ggplot(data = levelNumbers(percentages), aes(x = componentName, y = perc
   theme_minimal() +
   geom_bar(stat = "identity", position = "stack") +
   labs(#title = "Percentage of destroyed or alarm events per component",
-       x = NULL, y = "Percentage", fill = "Result") +
+       x = element_blank(), y = "Percentage", fill = "Result") +
   scale_fill_manual(values = c("grey", "#00d070"), labels = c("Destroyed", "Alarm"))
 plot + geom_text(aes(label = count), size = 3, position = position_stack(vjust = .5))
 ggsave(filename = paste0(outputDir, "destroyed_or_alarm_percentage.png"), width = 6, height = 4)
@@ -51,7 +51,7 @@ ggsave(filename = paste0(presentationDir, "destroyed_or_alarm_percentage_dark.pn
 
 ggplot(data = percentages, aes(x = componentName, y = count, fill = type)) +
   geom_bar(stat = "identity", position = "stack") +
-  labs(title = "Amount of destroyed or alarm events per component", x = NULL, y = "Amount", fill = "Result") +
+  labs(title = "Amount of destroyed or alarm events per component", x = element_blank(), y = "Amount", fill = "Result") +
   scale_fill_manual(values = c("grey", "#00d070"), labels = c("Destroyed", "Alarm")) +
   geom_text(aes(label = paste(round(percentage, 0), "%")), size = 3, position = position_stack(vjust = .5))
 

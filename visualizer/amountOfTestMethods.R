@@ -40,7 +40,7 @@ plot <- ggplot(data = levelNumbers(methods_per_component_avg), aes(x = component
   theme_minimal() +
   geom_bar(stat = "identity", fill = "#B8A0F8") +
   labs(#title = "Average amount of test methods per component",
-       x = NULL, y = "Average amount of test methods per class") +
+       x = element_blank(), y = "Average amount of test methods per class") +
   geom_text(aes(label = paste("Total:", methods_per_component_total %>%
     filter(componentName == as.character(componentName)) %>%
     pull(total))), vjust = 1.5, size = 3, color = "white")

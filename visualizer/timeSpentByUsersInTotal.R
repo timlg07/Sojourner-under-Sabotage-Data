@@ -44,7 +44,7 @@ plot_time_spent <- function (total_time_df, box_plot_scale = .15, show_mean = TR
     geom_boxplot(width = box_plot_scale, color = "white") +
     labs(#title = paste0("Total time spent on each type of tasks per user (", nrow(total_time_df), " users considered)"),
          x = "Type of tasks", y = "Time spent in minutes", fill = "Type of tasks", group = "Type of tasks") +
-    scale_fill_manual(values = c("#00d070", "#ff9e49", "#579ad6"), labels = c("Testing", "Debugging", "Other")) +
+    scale_fill_manual(values = colors[c(3, 1, 4)], labels = c("Testing", "Debugging", "Other")) +
     expand_limits(y = 0) +
     theme(legend.position = "none")
 

@@ -29,7 +29,7 @@ plot <- ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n))
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Course of study") +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
   geom_text(aes(label = ifelse(percentage > 5, paste(round(percentage, 0), "%"), '')), position = position_stack(vjust = 0.5)) +
-  scale_fill_manual(values = colors,
+  scale_fill_manual(values = colors[-1],
                     labels = course_of_study %>% # remove order prefix
                       mutate(courseOfStudy = gsub("\\d+__", '', courseOfStudy)) %>%
                       mutate(courseOfStudy = gsub("Informatik", 'Computer Science', courseOfStudy)) %>%
