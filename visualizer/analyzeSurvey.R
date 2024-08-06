@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 survey <- read.csv("./visualizer/survey.csv") %>%
   select(courseOfStudy = What.is.your.course.of.study., everything())
@@ -19,21 +22,25 @@ course_of_study <- survey %>%
   mutate(percentage = n / sum(n) * 100) %>%
   mutate(courseOfStudy = paste0(formatC(100 - round(percentage, 0), 2, flag = '0'), "__", # just there for the ordering
                                 courseOfStudy, " (", round(percentage, 0), " %)")) # actual name
-ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n)) +
+plot <- ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n)) +
   theme_minimal() +
   geom_bar(stat = "identity") +
   coord_polar("y", start = 0, clip = "on") +
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Course of study") +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
-  geom_text(aes(label = ifelse(percentage > 5, paste(round(percentage, 0), "%"), '')), position = position_stack(vjust = 0.5), color = "white") +
-  scale_fill_manual(values = c("#1f77b4", "#2ca02c", "#ff7f0e", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"),
+  geom_text(aes(label = ifelse(percentage > 5, paste(round(percentage, 0), "%"), '')), position = position_stack(vjust = 0.5)) +
+  scale_fill_manual(values = colors,
                     labels = course_of_study %>% # remove order prefix
                       mutate(courseOfStudy = gsub("\\d+__", '', courseOfStudy)) %>%
                       mutate(courseOfStudy = gsub("Informatik", 'Computer Science', courseOfStudy)) %>%
                       mutate(courseOfStudy = gsub("Wirtschaftsinformatik", 'Business Informatics', courseOfStudy)) %>%
                       mutate(courseOfStudy = gsub("Lehramt", 'Education', courseOfStudy)) %>%
                       pull(courseOfStudy))
+plot
 ggsave(filename = paste0(outputDir, "course_of_study.png"), width = 6, height = 4)
+
+plot_dark <- plot + theme(text = element_text(colour = "white")) #, plot.background = element_rect(fill = "black"))
+ggsave(filename = paste0(presentationDir, "course_of_study_dark.png"), plot = plot_dark, width = 6, height = 4)
 # ----
 
 # ---- PLOT --- Gender ------------
@@ -51,7 +58,7 @@ ggplot(data = gender, aes(x = "", fill = Gender, y = n)) +
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Gender") +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
   geom_text(aes(label = paste0(Gender, "\n", round(percentage, 0), " %  (", n, ")")), position = position_stack(vjust = 0.5), color = "#444444") +
-  scale_fill_manual(values = c("pink", "lightblue"))
+  scale_fill_manual(values = colors)
 ggsave(filename = paste0(outputDir, "gender.png"), width = 6, height = 4)
 # ----
 
@@ -71,9 +78,21 @@ likert_levels_experience <- c(
 )
 experience <- experience %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_experience)))
-gglikert(experience) +
-  scale_fill_viridis_d(option = "plasma")
+plot <- gglikert(experience) +
+  scale_fill_manual(values = colors[-1]) +
+  theme(axis.text.y = element_text(angle = 90, hjust = .5))
+plot
 ggsave(filename = paste0(outputDir, "experience_with_programming_likert.png"), width = 10, height = 3)
+plot_dark <- plot + theme(
+  text = element_text(colour = "white"),
+  axis.text = element_text(colour = "white"),
+  axis.ticks = element_line(colour = "#888888"),
+  panel.grid = element_line(colour = "#888888"),
+  plot.background = element_rect(fill = "transparent"),
+  panel.background = element_rect(fill = "transparent"),
+  legend.background = element_rect(fill = "transparent"))
+plot_dark
+ggsave(filename = paste0(presentationDir, "experience_with_programming_likert_dark.png"), width = 10, height = 3)
 # as bar chart
 ggplot(experience, aes(y = Java)) +
   theme_minimal() +
@@ -112,8 +131,7 @@ likert_levels_age <- age %>%
   sort()
 age <- tibble(Age = age$Age) %>% # defactorize using tibble
   mutate(across(everything(), ~factor(.x, levels = likert_levels_age)))
-gglikert(age)
-ggsave(filename = paste0(outputDir, "age.png"), width = 10, height = 3)
+ggsave(filename = paste0(outputDir, "age_tibble.png"), width = 10, height = 3)
 # heatmap
 age_counts <- age %>%
   group_by(Age) %>%
@@ -123,10 +141,29 @@ ggplot(age_counts, aes(x = Age, y = 1, fill = n)) +
   geom_tile() +
   ylab("") +
   scale_fill_viridis_c(option = "plasma")
+# bar chart
+plot <- ggplot(age_counts, aes(x = Age, y = n)) +
+  theme_minimal() +
+  geom_bar(stat = "identity", fill = "#B8A0F8") +
+  ylab("Students") +
+  xlab("Age") +
+  scale_y_continuous(breaks = seq(0, 12, 2)) +
+  scale_x_discrete(limits = factor(c(seq(18, 27, 1), '...', 38)))
+plot
+ggsave(filename = paste0(outputDir, "age.png"), width = 10, height = 3)
+plot_dark <- plot + theme(text = element_text(colour = "white"),
+                          axis.text = element_text(colour = "white"),
+                          axis.ticks = element_line(colour = "#888888"),
+                          panel.grid = element_line(colour = "#888888"))
+plot_dark
+ggsave(filename = paste0(presentationDir, "age_dark.png"), width = 10, height = 4)
 # values
 avg_age <- age %>%
   summarise(avg_age = mean(as.numeric(as.character(Age)))) %>%
   pull(avg_age)
+median_age <- age %>%
+  summarise(median_age = median(as.numeric(as.character(Age)))) %>%
+  pull(median_age)
 # ----
 
 

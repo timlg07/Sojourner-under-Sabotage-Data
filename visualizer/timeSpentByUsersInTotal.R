@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 time_testing <- fromJSON(txt = "./visualizer/r_json/timeUntilActivation_r.json", flatten = TRUE) %>%
   filter(value != "not finished") %>%
@@ -32,7 +35,7 @@ total_time$debug <- total_time$total_time.y
 total_time$other <- 60 - total_time$test - total_time$debug
 total_time <- total_time[, c("user", "test", "debug", "other")]
 
-plot_time_spent <- function (total_time_df, box_plot_scale = .15) {
+plot_time_spent <- function (total_time_df, box_plot_scale = .15, show_mean = TRUE) {
   total_time_melted <- melt(total_time_df, id = "user")
 
   plot <- ggplot(data = total_time_melted, aes(x = variable, y = value, fill = variable, group = variable)) +
@@ -43,16 +46,28 @@ plot_time_spent <- function (total_time_df, box_plot_scale = .15) {
          x = "Type of tasks", y = "Time spent in minutes", fill = "Type of tasks", group = "Type of tasks") +
     scale_fill_manual(values = c("#00d070", "#ff9e49", "#579ad6"), labels = c("Testing", "Debugging", "Other")) +
     expand_limits(y = 0) +
-    theme(legend.position = "none") +
-    # display mean value at the center of the boxplot
-    stat_summary(fun = mean, geom = "point", size = 1, color = "black") +
-    stat_summary(fun = mean, geom = "text", aes(label = paste("average:\n", round(..y.., 0), "min")), vjust = -.25)
+    theme(legend.position = "none")
+
+  if (show_mean) {
+    # show mean value at the center of the boxplot
+    plot <- plot +
+      stat_summary(fun = mean, geom = "point", size = 1, color = "black") +
+      stat_summary(fun = mean, geom = "text", aes(label = paste("average:\n", round(..y.., 0), "min")), vjust = -.25)
+  }
+
   return(plot)
 }
 
 plot <- plot_time_spent(total_time)
 plot
-ggsave(filename = paste0(outputDir, "time_spent_on_tasks.png"), plot, width = 10, height = 8)
+ggsave(filename = paste0(outputDir, "time_spent_on_tasks.png"), plot, width = 5, height = 4)
+plot_dark <- plot_time_spent(total_time, show_mean = FALSE) + theme(
+  text = element_text(colour = "white"),
+  axis.text = element_text(colour = "white"),
+  axis.ticks = element_line(colour = "#888888"),
+  panel.grid = element_line(colour = "#888888"))
+plot_dark
+ggsave(filename = paste0(presentationDir, "time_spent_on_tasks_dark.png"), plot = plot_dark, width = 5, height = 4)
 
 # restrict to only people who reached level 4
 level_reached <- fromJSON(txt = "./visualizer/r_json/levelReached_r.json", flatten = TRUE)
@@ -63,7 +78,14 @@ total_time_level4 <- inner_join(total_time, users_that_reached_level4, by = "use
 
 plot <- plot_time_spent(total_time_level4, box_plot_scale = .08)
 plot
-ggsave(filename = paste0(outputDir, "time_spent_on_tasks_level4+.png"), plot, width = 10, height = 8)
+ggsave(filename = paste0(outputDir, "time_spent_on_tasks_level4+.png"), plot, width = 5, height = 4)
+plot_dark <- plot_time_spent(total_time_level4, box_plot_scale = .08, show_mean = FALSE) + theme(
+  text = element_text(colour = "white"),
+  axis.text = element_text(colour = "white"),
+  axis.ticks = element_line(colour = "#888888"),
+  panel.grid = element_line(colour = "#888888"))
+plot_dark
+ggsave(filename = paste0(presentationDir, "time_spent_on_tasks_level4+_dark.png"), plot = plot_dark, width = 5, height = 4)
 
 # find users that are in level_reached, but not in the total_time df
 users_not_in_total_time <- level_reached %>%

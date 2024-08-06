@@ -5,6 +5,7 @@ library(purrr)
 library(reshape2)
 
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 ## -- Load data ---------------------------------
 coverage <- fromJSON(txt = "./visualizer/r_json/coverageAtActivation_r.json", flatten = TRUE) %>%
@@ -50,7 +51,7 @@ cov_and_result <- inner_join(coverage_per_player, cov_and_result, by = "user")
 
 
 set.seed(42)
-ggplot(data = cov_and_result, aes()) +
+plot <- ggplot(data = cov_and_result, aes()) +
   theme_minimal() +
   geom_point(aes(x = fraction, y = destroyed, color = "Destroyed"), pch = 20, alpha = .25, size = 6, position = position_jitter(width = 0, height = 0.05)) +
   geom_smooth(aes(x = fraction, y = destroyed, color = "Destroyed"), method = "lm", se = FALSE, formula = y ~ x) +
@@ -59,7 +60,14 @@ ggplot(data = cov_and_result, aes()) +
   labs(x = "Test coverage", y = "Amount of events", color = "Result") +
   scale_color_manual(values = c("blue", "red"), labels = c("Alarm", "Destroyed")) +
   scale_y_continuous(breaks = seq(0, 13, 1), minor_breaks = numeric(0))
-ggsave(filename = paste0(outputDir, "coverage_vs_destroyed_or_alarm_regression.png"), width = 12, height = 8)
+plot
+ggsave(filename = paste0(outputDir, "coverage_vs_destroyed_or_alarm_regression.png"), width = 6, height = 4)
+plot_dark <- plot + theme(text = element_text(colour = "white"),
+                          axis.text = element_text(colour = "white"),
+                          axis.ticks = element_line(colour = "#888888"),
+                          panel.grid = element_line(colour = "#888888"))
+plot_dark
+ggsave(filename = paste0(presentationDir, "coverage_vs_destroyed_or_alarm_regression_dark.png"), plot = plot_dark, width = 6, height = 4)
 
 d <- lm(destroyed ~ fraction, data = cov_and_result)
 ds <- summary(d)

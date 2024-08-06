@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 destroyed_or_alarm <- fromJSON(txt = "./visualizer/r_json/destroyedOrAlarm_r.json", flatten = TRUE) %>%
   mutate(value = as.character(value))
@@ -27,18 +30,28 @@ percentages <- merge(sums, counts, by = c("componentName", "value")) %>%
   select(componentName, type = value, percentage, count = count.y) %>%
   mutate(type = ifelse(type == "destroyed", "1 Destroyed", "2 Alarm"))
 
-ggplot(data = percentages, aes(x = componentName, y = percentage, fill = type)) +
+plot <- ggplot(data = levelNumbers(percentages), aes(x = componentName, y = percentage, fill = type)) +
   theme_minimal() +
   geom_bar(stat = "identity", position = "stack") +
   labs(#title = "Percentage of destroyed or alarm events per component",
-       x = "Component", y = "Percentage", fill = "Result") +
-  scale_fill_manual(values = c("grey", "#00d070"), labels = c("Destroyed", "Alarm")) +
-  geom_text(aes(label = count), size = 3, position = position_stack(vjust = .5))
-ggsave(filename = paste0(outputDir, "destroyed_or_alarm_percentage.png"), width = 10, height = 5)
+       x = NULL, y = "Percentage", fill = "Result") +
+  scale_fill_manual(values = c("grey", "#00d070"), labels = c("Destroyed", "Alarm"))
+plot + geom_text(aes(label = count), size = 3, position = position_stack(vjust = .5))
+ggsave(filename = paste0(outputDir, "destroyed_or_alarm_percentage.png"), width = 6, height = 4)
+
+plot_dark <- plot + theme(text = element_text(colour = "white"),
+                          axis.text = element_text(colour = "white"),
+                          axis.ticks = element_line(colour = "#888888"),
+                          panel.grid = element_line(colour = "#888888")) +
+  geom_text(aes(label = count, color = type), size = 3, position = position_stack(vjust = .5)) +
+  scale_fill_manual(values = c("#333333", "#B8A0F8"), labels = c("Destroyed", "Alarm")) +
+  scale_color_manual(values = c("white", "black"), guide = "none")
+plot_dark
+ggsave(filename = paste0(presentationDir, "destroyed_or_alarm_percentage_dark.png"), plot_dark, width = 6, height = 4)
 
 ggplot(data = percentages, aes(x = componentName, y = count, fill = type)) +
   geom_bar(stat = "identity", position = "stack") +
-  labs(title = "Amount of destroyed or alarm events per component", x = "Component", y = "Amount", fill = "Result") +
+  labs(title = "Amount of destroyed or alarm events per component", x = NULL, y = "Amount", fill = "Result") +
   scale_fill_manual(values = c("grey", "#00d070"), labels = c("Destroyed", "Alarm")) +
   geom_text(aes(label = paste(round(percentage, 0), "%")), size = 3, position = position_stack(vjust = .5))
 

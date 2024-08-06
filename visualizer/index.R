@@ -1,4 +1,4 @@
-main <- function(libPaths = .libPaths(), rDir = "visualizer/", entry = "index.R", outputDir = "./") {
+main <- function(libPaths = .libPaths(), rDir = "visualizer/", entry = "index.R", outputDir = "./", presentationDir = "./") {
   # print version
   print(R.version)
 
@@ -11,6 +11,9 @@ main <- function(libPaths = .libPaths(), rDir = "visualizer/", entry = "index.R"
   # support paths without trailing slash
   if (!endsWith(outputDir, "/")) {
     outputDir <- paste0(outputDir, "/")
+  }
+  if (!endsWith(presentationDir, "/")) {
+      presentationDir <- paste0(presentationDir, "/")
   }
 
   # prohibit generation of the Rplots.pdf
