@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 time <- fromJSON(txt = "./visualizer/r_json/timeUntilFirstPass_r.json", flatten = TRUE) %>%
   filter(value != "not finished") %>%
@@ -56,16 +59,7 @@ ggplot(data = avg_per_component_only_users_that_reached_level4, aes(x = componen
 ggsave(filename = paste0(outputDir, "timeUntilFirstPass_avg_per_component_only_users_that_reached_level4.png"), width = 10, height = 5)
 
 
-# create contingency table of observed values
-component_name_to_index <- function(component_name) {
-  switch(component_name,
-         "CryoSleep" = return(1),
-         "Engine" = return(2),
-         "GreenHouse" = return(3),
-         "Kitchen" = return(4),
-         "ReactorLog" = return(5),
-  )
-}
+
 
 nn <- time %>%
   filter(user %in% users_that_reached_level4$user) %>%

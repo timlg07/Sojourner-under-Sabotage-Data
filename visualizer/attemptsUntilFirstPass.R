@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 attempts <- fromJSON(txt = "./visualizer/r_json/attemptsUntilFirstPass_r.json", flatten = TRUE) %>%
   filter(success) %>%
@@ -74,16 +77,7 @@ ggplot(data = avg_per_component_only_users_that_reached_level4_melted, aes(x = c
 ggsave(filename = paste0(outputDir, "attemptsUntilFirstPass_avg_per_component_only_users_that_reached_level4.png"), width = 10, height = 5)
 
 
-# create contingency table of observed values
-component_name_to_index <- function(component_name) {
-  switch(component_name,
-         "CryoSleep" = return(1),
-         "Engine" = return(2),
-         "GreenHouse" = return(3),
-         "Kitchen" = return(4),
-         "ReactorLog" = return(5),
-  )
-}
+
 
 nn <- attempts %>%
   filter(user %in% users_that_reached_level4$user) %>%

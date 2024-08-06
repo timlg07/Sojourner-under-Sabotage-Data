@@ -12,6 +12,8 @@ debugging <- fromJSON(txt = "./visualizer/r_json/attemptsUntilFixed_summary_r.js
   filter(deltaTime < 55) %>% # continued playing at home
   select(user, componentName, deltaTime, modifications, executions, hiddenTestsAdded)
 
+debugging %>% group_by(modifications) %>% summarise(count = n()) %>% arrange(desc(count))
+
 debugging_per_component <- debugging %>%
   group_by(componentName) %>%
   summarise(avg_time = mean(deltaTime), avg_mod = mean(modifications),

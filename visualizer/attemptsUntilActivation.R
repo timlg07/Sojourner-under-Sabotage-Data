@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 attempts <- fromJSON(txt = "./visualizer/r_json/attemptsUntilActivation_r.json", flatten = TRUE)
 
@@ -49,17 +52,26 @@ ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill =
 ggsave(filename = paste0(outputDir, "attemptsUntilActivation_avg_per_component.png"), width = 10, height = 5)
 
 # same plot, but stretched to percentages
-ggplot(data = avg_per_component_melted, aes(x = componentName, group = variable, y = value / total)) +
+plot <- ggplot(data = levelNumbers(avg_per_component_melted), aes(x = componentName, group = variable, y = value / total)) +
   theme_minimal() +
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   labs(#title = "Average errors, fails and successes of test run attempts per component",
-       x = "Component", y = "Average", fill = "Result") +
-  scale_fill_manual(values = c("red", "orange", "green"), labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
+       x = element_blank(), y = "Average", fill = "Result") +
+  scale_fill_manual(values = c(colors[7], colors[12], colors[13]), labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
-  geom_text(aes(label = ifelse(value > 0, paste0(round(value / total * 100, 0), " %\n(", round(value, 1), ")"), '')), position = position_stack(vjust = 0.5), size = 3)
-ggsave(filename = paste0(outputDir, "attempts_until_activation_avg_per_component_percentages.png"), width = 8, height = 5)
+  geom_text(aes(label = ifelse(value > 0, paste0(round(value / total * 100, 0), " %\n(", round(value, 1), ")"), '')),
+            color = ifelse(avg_per_component_melted$variable != "avg_errors", "black", "white"),
+            position = position_stack(vjust = 0.5), size = 3)
+plot
+ggsave(filename = paste0(outputDir, "attempts_until_activation_avg_per_component_percentages.png"), width = 7, height = 5)
+plot_dark <- plot + theme(text = element_text(colour = "white"),
+                          axis.text = element_text(colour = "white"),
+                          axis.ticks = element_line(colour = "#888888"),
+                          panel.grid = element_line(colour = "#888888"))
+plot_dark
+ggsave(filename = paste0(presentationDir, "attempts_until_activation_avg_per_component_percentages_dark.png"), plot = plot_dark, width = 7, height = 5)
 
 level_reached <- fromJSON(txt = "./visualizer/r_json/levelReached_r.json", flatten = TRUE)
 users_that_reached_level4 <- level_reached %>%
@@ -90,16 +102,7 @@ plot
 ggsave(filename = paste0(outputDir, "attemptsUntilActivation_avg_per_component_only_users_that_reached_level4.png"), plot, width = 10, height = 5)
 
 
-# create contingency table of observed values
-component_name_to_index <- function(component_name) {
-  switch(component_name,
-         "CryoSleep" = return(1),
-         "Engine" = return(2),
-         "GreenHouse" = return(3),
-         "Kitchen" = return(4),
-         "ReactorLog" = return(5),
-  )
-}
+
 
 nnn <- attempts %>%
   filter(user %in% users_that_reached_level4$user) %>%
