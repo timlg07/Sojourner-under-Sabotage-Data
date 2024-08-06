@@ -19,5 +19,5 @@ colors <- c(
   "#639ECBFF", # monochromatic of 4
   "#37D1CBFF", # monochromatic of 3
   "#E0F8A0FF", # complementary of 1
-  "#9470F5FF", # monochromatic of 0
+  "#9470F5FF"  # monochromatic of 0
 )

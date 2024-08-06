@@ -131,6 +131,7 @@ likert_levels_age <- age %>%
   sort()
 age <- tibble(Age = age$Age) %>% # defactorize using tibble
   mutate(across(everything(), ~factor(.x, levels = likert_levels_age)))
+gglikert(age)
 ggsave(filename = paste0(outputDir, "age_tibble.png"), width = 10, height = 3)
 # heatmap
 age_counts <- age %>%
