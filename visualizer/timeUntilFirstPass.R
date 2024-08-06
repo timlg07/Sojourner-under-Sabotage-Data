@@ -1,5 +1,6 @@
 library(jsonlite)
 library(ggplot2)
+library(ggdark)
 library(dplyr)
 library(purrr)
 library(reshape2)
@@ -95,17 +96,19 @@ plot <- ggplot(data = time, aes(x = componentName, y = value)) +
   geom_boxplot(alpha = 0.25, color = "gray")
 plot
 
-ggplot(data = m, aes(x = componentIndex, y = value)) +
+plot <- ggplot(data = levelNumbers(m), aes(x = componentIndex, y = value)) +
   theme_minimal() +
-  geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
+  geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[1]) +
   #geom_violin(aes(x = componentName), alpha = .25) +
   labs(#title = "time per component for the 12 users with data on all of the first four levels",
-       x = "Component", y = "time in min") +
+       x = element_blank(), y = "time in min") +
   geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red", aes(x = componentIndex)) + #linetype = "dashed"
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[12], aes(x = componentIndex)) + #linetype = "dashed"
   # geom_smooth(se = FALSE, color = "blue", aes(x = componentIndex)) +
   expand_limits(y = 0)
-ggsave(filename = paste0(outputDir, "time_until_first_pass_trend.png"), width = 10, height = 8)
+plot
+ggsave(filename = paste0(outputDir, "time_until_first_pass_trend.png"), width = 7.5, height = 6)
+ggsave(filename = paste0(presentationDir, "time_until_first_pass_trend_dark.png"), plot = plot + ggdark::dark_theme_minimal(), width = 7.5, height = 6)
 
 res <- lm(m$value ~ m$componentIndex)
 

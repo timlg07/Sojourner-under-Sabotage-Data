@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 debugging <- fromJSON(txt = "./visualizer/r_json/attemptsUntilFixed_summary_r.json", flatten = TRUE) %>%
   filter(deltaTime != "not fixed") %>%
@@ -41,14 +44,16 @@ totals <- debugging %>%
 
 debugging_melted <- melt(debugging, id = c("componentName", "user")) %>%
   filter(variable != "executions")
-ggplot(data = debugging_melted, aes(x = componentName, y = value, color = variable, group = interaction(componentName, variable))) +
+plot <- ggplot(data = levelNumbers(debugging_melted), aes(x = componentName, y = value, color = variable, group = interaction(componentName, variable))) +
   theme_minimal() +
   #geom_violin() +
   geom_boxplot(width = .5) +
   #geom_smooth(method = "loess",se = FALSE, formula = y ~ x, aes(group = variable), linetype = "dashed", size = .5) +
   #geom_point()+
   labs(#title = "Time spent debugging per component",
-       x = "Component", y = "Time spent in minutes", fill = "Type of metric", group = "Type of metric") +
-  scale_color_manual(values = c("red", "blue", "orange"), labels = c("Time", "Modifications", "Hidden tests added")) +
+       x = element_blank(), y = "Time spent in minutes", fill = "Type of metric", group = "Type of metric") +
+  scale_color_manual(values = c(colors[8], colors[11], colors[7]), labels = c("Time", "Modifications", "Hidden tests added")) +
   scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 100, 2)), breaks = seq(0, 100, 2))
-ggsave(filename = paste0(outputDir, "debugging_performance_per_component_boxplots.png"), width = 12, height = 8)
+plot
+ggsave(filename = paste0(outputDir, "debugging_performance_per_component_boxplots.png"), width = 7, height = 4)
+ggsave(filename = paste0(presentationDir, "debugging_performance_per_component_boxplots_dark.png"), plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA)), width = 7, height = 4)

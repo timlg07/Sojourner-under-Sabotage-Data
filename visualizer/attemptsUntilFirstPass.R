@@ -1,5 +1,6 @@
 library(jsonlite)
 library(ggplot2)
+library(ggdark)
 library(dplyr)
 library(purrr)
 library(reshape2)
@@ -113,14 +114,16 @@ print(paste0("Chi-Square test p-value: ", result$p.value))
 #ggpubr::ggballoonplot(as.data.frame(result$result))
 
 
-ggplot(data = m, aes(x = componentIndex, y = total)) +
+plot <- ggplot(data = levelNumbers(m), aes(x = componentIndex, y = total)) +
   theme_minimal() +
-  geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
+  geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[1]) +
   labs(#title = "Attempts per component for the 12 users with data on all first 4 levels",
-       x = "Component", y = "Attempts") +
+       x = element_blank(), y = "Attempts") +
   geom_point(aes(x = componentName)) +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")
-ggsave(filename = paste0(outputDir, "attempts_until_first_pass_trend.png"), width = 10, height = 8)
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[12])
+plot
+ggsave(filename = paste0(outputDir, "attempts_until_first_pass_trend.png"), width = 7.5, height = 6)
+ggsave(filename = paste0(presentationDir, "attempts_until_first_pass_trend_dark.png"), plot = plot + ggdark::dark_theme_minimal(), width = 7.5, height = 6)
 
 model <- lm(total ~ componentIndex, data = m)
 summary_model <- summary(model)
