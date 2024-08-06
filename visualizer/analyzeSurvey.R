@@ -123,6 +123,12 @@ ggsave(filename = paste0(outputDir, "likert_plots.png"), width = 9, height = 9)
 # Plot improvement questions
 gglikert(all, 13:14, labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
 ggsave(filename = paste0(presentationDir, "likert_plots_13-14_dark.png"), width = 9, height = 2)
+# Plot general perception
+gglikert(all, c(1:4, 11, 12), labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
+ggsave(filename = paste0(presentationDir, "likert_plots_1-4_dark.png"), width = 9, height = 6)
+# Plot testing/debugging perception
+gglikert(all, 5:10, labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
+ggsave(filename = paste0(presentationDir, "likert_plots_5-10_dark.png"), width = 9, height = 6)
 # ----
 
 # ---- PLOT --- Age as likert plot ------------
