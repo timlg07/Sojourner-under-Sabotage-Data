@@ -29,6 +29,9 @@ colors <- c(
   "#F59470FF", # triadic of previous
   "#70F594FF"  # triadic of previous
 )
+colors_likert <- c(
+  colors[5], colors[1], colors[2], colors[3], colors[4]
+)
 
 # visualize all colors
 color_guide <- ggplot(data = data.frame(x = 1:length(colors), y = 1), aes(x = x, y = y, fill = as.factor(x))) +

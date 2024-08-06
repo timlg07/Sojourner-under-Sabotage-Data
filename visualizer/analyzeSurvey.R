@@ -1,5 +1,6 @@
 library(ggstats)
 library(ggplot2)
+library(ggdark)
 library(dplyr)
 library(purrr)
 library(reshape2)
@@ -117,8 +118,11 @@ all <- survey %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
   # add numbers to all questions
 colnames(all) <- sprintf("(Q%02d) %s", seq(1, 14), colnames(all))
-gglikert(all)
+gglikert(all) + scale_fill_manual(values = colors[-1])
 ggsave(filename = paste0(outputDir, "likert_plots.png"), width = 9, height = 9)
+# Plot improvement questions
+gglikert(all, 13:14, labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
+ggsave(filename = paste0(presentationDir, "likert_plots_13-14_dark.png"), width = 9, height = 2)
 # ----
 
 # ---- PLOT --- Age as likert plot ------------
