@@ -57,7 +57,7 @@ plot_smells <- function(data) {
       geom_text(aes(label = ifelse(percentage >= 2 & value > 1,
                                    paste0(round(percentage, 0), "% (", round(value, 0), ")"),
                                    '')),
-                size = 3, position = position_stack(vjust = .5)) +
+                size = 3, position = position_stack(vjust = .5), color = "black") +
       scale_fill_manual(values = colors[-c(5, 6, 7)])
   )
 }
