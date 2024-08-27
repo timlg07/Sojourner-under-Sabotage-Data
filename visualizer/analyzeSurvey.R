@@ -84,14 +84,7 @@ plot <- gglikert(experience) +
   theme(axis.text.y = element_text(angle = 90, hjust = .5))
 plot
 ggsave(filename = paste0(outputDir, "experience_with_programming_likert.png"), width = 10, height = 3)
-plot_dark <- plot + theme(
-  text = element_text(colour = "white"),
-  axis.text = element_text(colour = "white"),
-  axis.ticks = element_line(colour = "#888888"),
-  panel.grid = element_line(colour = "#888888"),
-  plot.background = element_rect(fill = "transparent"),
-  panel.background = element_rect(fill = "transparent"),
-  legend.background = element_rect(fill = "transparent"))
+plot_dark <- plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
 plot_dark
 ggsave(filename = paste0(presentationDir, "experience_with_programming_likert_dark.png"), width = 10, height = 3)
 # as bar chart
@@ -124,11 +117,11 @@ ggsave(filename = paste0(outputDir, "likert_plots.png"), width = 9, height = 9)
 gglikert(all, 13:14, labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
 ggsave(filename = paste0(presentationDir, "likert_plots_13-14_dark.png"), width = 9, height = 2)
 # Plot general perception
-gglikert(all, c(1:4, 11, 12), labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
-ggsave(filename = paste0(presentationDir, "likert_plots_1-4_dark.png"), width = 9, height = 6)
+gglikert(all, 1:4, labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
+ggsave(filename = paste0(presentationDir, "likert_plots_1-4_dark.png"), width = 9, height = 4)
 # Plot testing/debugging perception
-gglikert(all, 5:10, labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
-ggsave(filename = paste0(presentationDir, "likert_plots_5-10_dark.png"), width = 9, height = 6)
+gglikert(all, 5:9, labels_color = "white") + scale_fill_manual(values = colors[-1]) + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
+ggsave(filename = paste0(presentationDir, "likert_plots_5-10_dark.png"), width = 9, height = 5)
 # ----
 
 # ---- PLOT --- Age as likert plot ------------

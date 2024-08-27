@@ -52,7 +52,7 @@ plot <- ggplot(data = levelNumbers(debugging_melted), aes(x = componentName, y =
   #geom_point()+
   labs(#title = "Time spent debugging per component",
        x = element_blank(), y = "Time spent in minutes", fill = "Type of metric", group = "Type of metric") +
-  scale_color_manual(values = c(colors[8], colors[11], colors[7]), labels = c("Time", "Modifications", "Hidden tests added")) +
+  scale_color_manual(values = c(colors[8], colors[11], colors[7]), labels = c("Time", "Modifications", "Hidden tests added"), name = "Type of metric") +
   scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 100, 2)), breaks = seq(0, 100, 2))
 plot
 ggsave(filename = paste0(outputDir, "debugging_performance_per_component_boxplots.png"), width = 7, height = 4)

@@ -108,7 +108,7 @@ plot <- ggplot(data = levelNumbers(m), aes(x = componentIndex, y = value)) +
   expand_limits(y = 0)
 plot
 ggsave(filename = paste0(outputDir, "time_until_first_pass_trend.png"), width = 7.5, height = 6)
-ggsave(filename = paste0(presentationDir, "time_until_first_pass_trend_dark.png"), plot = plot + ggdark::dark_theme_minimal(), width = 7.5, height = 6)
+ggsave(filename = paste0(presentationDir, "time_until_first_pass_trend_dark.png"), plot = plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA)), width = 7.5, height = 6)
 
 res <- lm(m$value ~ m$componentIndex)
 

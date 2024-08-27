@@ -123,7 +123,7 @@ plot <- ggplot(data = levelNumbers(m), aes(x = componentIndex, y = total)) +
   geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[12])
 plot
 ggsave(filename = paste0(outputDir, "attempts_until_first_pass_trend.png"), width = 7.5, height = 6)
-ggsave(filename = paste0(presentationDir, "attempts_until_first_pass_trend_dark.png"), plot = plot + ggdark::dark_theme_minimal(), width = 7.5, height = 6)
+ggsave(filename = paste0(presentationDir, "attempts_until_first_pass_trend_dark.png"), plot = plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA)), width = 7.5, height = 6)
 
 model <- lm(total ~ componentIndex, data = m)
 summary_model <- summary(model)

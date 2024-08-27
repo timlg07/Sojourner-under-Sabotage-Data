@@ -1,5 +1,6 @@
 library(jsonlite)
 library(ggplot2)
+library(ggdark)
 library(dplyr)
 library(purrr)
 library(reshape2)
@@ -64,10 +65,7 @@ plot <- ggplot(data = cov_and_result, aes()) +
   scale_y_continuous(breaks = seq(0, 13, 1), minor_breaks = numeric(0))
 plot
 ggsave(filename = paste0(outputDir, "coverage_vs_destroyed_or_alarm_regression.png"), width = 6, height = 4)
-plot_dark <- plot + theme(text = element_text(colour = "white"),
-                          axis.text = element_text(colour = "white"),
-                          axis.ticks = element_line(colour = "#888888"),
-                          panel.grid = element_line(colour = "#888888"))
+plot_dark <- plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))
 plot_dark
 ggsave(filename = paste0(presentationDir, "coverage_vs_destroyed_or_alarm_regression_dark.png"), plot = plot_dark, width = 6, height = 4)
 
