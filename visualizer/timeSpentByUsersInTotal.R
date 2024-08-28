@@ -91,3 +91,14 @@ ggsave(filename = paste0(presentationDir, "time_spent_on_tasks_level4+_dark.png"
 users_not_in_total_time <- level_reached %>%
   anti_join(total_time, by = "user")
 # (they're not included as they haven't activated a single test -> no data)
+
+
+# load survey data
+survey <- read.csv("./visualizer/survey.csv") %>%
+  select(user = "Username", gender = "Gender", java = "Experience.with.Java", programming = "Experience.with.programming..any.language.")
+total_time_demographics <- merge(total_time, survey, by = "user")
+
+# male vs female time spent
+plot <- plot_time_spent(total_time_demographics %>% filter(gender == "Male") %>% select(user, test, debug, other))
+plot <- plot_time_spent(total_time_demographics %>% filter(gender == "Female") %>% select(user, test, debug, other))
+# no real difference
