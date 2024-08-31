@@ -111,6 +111,23 @@ plot <- ggplot(data = performance, aes(x = gender, y = smells)) +
 plot
 ggsave(paste0(outputDir, "smells_by_gender.png"), width = 6, height = 4)
 t.test(performance$smells ~ performance$gender)
+# Shapiro-Wilk test for normality
+shapiro.test(performance$smells[performance$gender == "Male"])
+shapiro.test(performance$smells[performance$gender == "Female"])
+
+hist(performance$smells[performance$gender == "Male"], main="Histogram of Data", xlab="Values", ylab="Frequency", col="lightblue", border="black")
+hist(performance$smells[performance$gender == "Female"], main="Histogram of Data", xlab="Values", ylab="Frequency", col="lightblue", border="black")
+
+# Q-Q plot to visually inspect normality
+qqnorm(performance$smells[performance$gender == "Male"], main="Q-Q Plot of Data", xlab="Theoretical Quantiles", ylab="Sample Quantiles", col="blue", pch=19)
+qqline(performance$smells[performance$gender == "Male"], col="red")
+qqnorm(performance$smells[performance$gender == "Female"], main="Q-Q Plot of Data", xlab="Theoretical Quantiles", ylab="Sample Quantiles", col="blue", pch=19)
+qqline(performance$smells[performance$gender == "Female"], col="red")
+
+# Kolmogorov-Smirnov test for normality
+ks.test(performance$smells[performance$gender == "Male"], "pnorm", mean=mean(performance$smells[performance$gender == "Male"]), sd=sd(performance$smells[performance$gender == "Male"]))
+ks.test(performance$smells[performance$gender == "Female"], "pnorm", mean=mean(performance$smells[performance$gender == "Female"]), sd=sd(performance$smells[performance$gender == "Female"]))
+
 # 1.2) time_until_first_pass
 plot <- ggplot(data = performance, aes(x = gender, y = time_until_first_pass)) +
   theme_minimal() +
