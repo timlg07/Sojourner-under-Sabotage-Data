@@ -116,11 +116,11 @@ print(paste0("Chi-Square test p-value: ", result$p.value))
 
 plot <- ggplot(data = levelNumbers(m), aes(x = componentIndex, y = total)) +
   theme_minimal() +
-  geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[1]) +
+  geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[5], fill = colors[1]) +
   labs(#title = "Attempts per component for the 12 users with data on all first 4 levels",
        x = element_blank(), y = "Attempts") +
-  geom_point(aes(x = componentName)) +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[12])
+  #geom_point(aes(x = componentName)) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[3])
 plot
 ggsave(filename = paste0(outputDir, "attempts_until_first_pass_trend.png"), width = 7.5, height = 6)
 ggsave(filename = paste0(presentationDir, "attempts_until_first_pass_trend_dark.png"), plot = plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA)), width = 7.5, height = 6)

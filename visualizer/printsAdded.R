@@ -29,7 +29,7 @@ plot <- ggplot(data = levelNumbers(prints_per_component_total), aes(x = componen
   theme_minimal() +
   geom_bar(stat = "identity", fill = colors[1]) +
   labs(x = element_blank(), y = "Total amount of prints added") +
-  geom_text(aes(label = paste("Total:", total)), vjust = 1.5, size = 3, color = "black")
+  geom_text(aes(label = paste("Total:", total)), vjust = 2, size = 3, color = "white")
 plot
 ggsave(paste0(outputDir, "prints_added_per_component.png"), width = 6, height = 4)
 plot_dark <- plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA))

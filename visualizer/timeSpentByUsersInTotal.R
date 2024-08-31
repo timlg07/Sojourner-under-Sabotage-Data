@@ -52,7 +52,7 @@ plot_time_spent <- function (total_time_df, box_plot_scale = .15, show_mean = TR
     # show mean value at the center of the boxplot
     plot <- plot +
       stat_summary(fun = mean, geom = "point", size = 1, color = "black") +
-      stat_summary(fun = mean, geom = "text", aes(label = paste("average:\n", round(..y.., 0), "min")), vjust = -.25)
+      stat_summary(fun = mean, geom = "text", aes(label = paste("average:\n", round(..y.., 0), "min")), vjust = -.25, color = "black")
   }
 
   return(plot)

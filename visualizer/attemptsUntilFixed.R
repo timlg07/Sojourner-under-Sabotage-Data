@@ -44,15 +44,15 @@ totals <- debugging %>%
 
 debugging_melted <- melt(debugging, id = c("componentName", "user")) %>%
   filter(variable != "executions")
-plot <- ggplot(data = levelNumbers(debugging_melted), aes(x = componentName, y = value, color = variable, group = interaction(componentName, variable))) +
+plot <- ggplot(data = levelNumbers(debugging_melted), aes(x = componentName, y = value, color = variable, fill = variable, group = interaction(componentName, variable))) +
   theme_minimal() +
   #geom_violin() +
   geom_boxplot(width = .5) +
   #geom_smooth(method = "loess",se = FALSE, formula = y ~ x, aes(group = variable), linetype = "dashed", size = .5) +
   #geom_point()+
-  labs(#title = "Time spent debugging per component",
-       x = element_blank(), y = "Time spent in minutes", fill = "Type of metric", group = "Type of metric") +
-  scale_color_manual(values = c(colors[8], colors[11], colors[7]), labels = c("Time", "Modifications", "Hidden tests added"), name = "Type of metric") +
+  labs(x = element_blank(), y = "Time spent in minutes", fill = "Type of metric", group = "Type of metric") +
+  scale_color_manual(values = c(colors[4], colors[5], colors[7]), labels = c("Time", "Modifications", "Hidden tests added"), name = "Type of metric") +
+  scale_fill_manual(values = c(colors[2], colors[1], colors[12]), guide = "none") +
   scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 100, 2)), breaks = seq(0, 100, 2))
 plot
 ggsave(filename = paste0(outputDir, "debugging_performance_per_component_boxplots.png"), width = 7, height = 4)

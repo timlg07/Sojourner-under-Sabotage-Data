@@ -98,12 +98,12 @@ plot
 
 plot <- ggplot(data = levelNumbers(m), aes(x = componentIndex, y = value)) +
   theme_minimal() +
-  geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[1]) +
+  geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[5], fill = colors[1]) +
   #geom_violin(aes(x = componentName), alpha = .25) +
   labs(#title = "time per component for the 12 users with data on all of the first four levels",
        x = element_blank(), y = "time in min") +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[12], aes(x = componentIndex)) + #linetype = "dashed"
+  #geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[3], aes(x = componentIndex)) + #linetype = "dashed"
   # geom_smooth(se = FALSE, color = "blue", aes(x = componentIndex)) +
   expand_limits(y = 0)
 plot

@@ -35,7 +35,7 @@ plot <- ggplot(data = levelNumbers(percentages), aes(x = componentName, y = perc
   geom_bar(stat = "identity", position = "stack") +
   labs(#title = "Percentage of destroyed or alarm events per component",
        x = element_blank(), y = "Percentage", fill = "Result") +
-  scale_fill_manual(values = c("grey", "#00d070"), labels = c("Destroyed", "Alarm"))
+  scale_fill_manual(values = c("#ddd", colors[1]), labels = c("Destroyed", "Alarm"))
 plot + geom_text(aes(label = count), size = 3, position = position_stack(vjust = .5))
 ggsave(filename = paste0(outputDir, "destroyed_or_alarm_percentage.png"), width = 6, height = 4)
 
@@ -102,7 +102,7 @@ ggplot(data = time_and_results, aes(x = total_time, y = destroyed, color = "Dest
   geom_smooth(aes(x = total_time, y = alarm, color = "Alarm"), method = "lm", se = FALSE, formula = y ~ x) +
   labs(#title = "Total time spent testing vs. amount of destroyed or alarm events",
          x = "Time spent in minutes", y = "Amount of events", color = "Result") +
-  scale_color_manual(values = c( "blue","red"), labels = c("Alarm","Destroyed"))
+  scale_color_manual(values = colors[c(3,5)], labels = c("Alarm","Destroyed"))
 ggsave(filename = paste0(outputDir, "time_spent_testing_vs_destroyed_or_alarm.png"), width = 10, height = 5)
 
 # check if significant using linear regression

@@ -26,7 +26,7 @@ times <- merge(time_testing, time_debugging, by = c("user", "componentName"), al
   select(user, componentName, test, debug)
 
 
-plot_time_spent <- function(time_df, box_plot_scale = .15) {
+plot_time_spent <- function(time_df, box_plot_scale = .5) {
   df_melted <- melt(time_df, id = c("user", "componentName")) %>%
     mutate(variable = ifelse(variable == "test", "1 Testing", "2 Debugging")) %>%
     filter(value > 0)
@@ -37,9 +37,11 @@ plot_time_spent <- function(time_df, box_plot_scale = .15) {
     nrow()
 
   plot <- ggplot(data = df_melted, aes(x = componentName, y = value, fill = variable, group = interaction(componentName, variable))) +
-    geom_boxplot() +
+    theme_minimal() +
+    geom_boxplot(width = box_plot_scale, color = "#888") +
     stat_summary(fun = mean, geom = "text", aes(label = paste("\naverage:", round(..y.., 0), "min\n"), vjust = ifelse(variable == "1 Testing", 0.1, 0.9)), hjust = 0.5, angle = 90) +
-    scale_fill_manual(values = c("#00d070", "#ff9e49"), labels = c("Testing", "Debugging")) +
+    scale_fill_manual(values = colors[c(2,1)], labels = c("Testing", "Debugging")) +
+    #scale_color_manual(values = colors[c(4,5)], labels = c("Testing", "Debugging")) +
     expand_limits(y = 45) +
     labs(title = paste0("Total time spent on each type of tasks per user and component \n(", user_count, " users considered)"),
          x = "Level", y = "Time spent in minutes", fill = "Type of tasks", group = "Type of tasks")

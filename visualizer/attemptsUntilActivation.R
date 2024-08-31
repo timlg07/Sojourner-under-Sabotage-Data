@@ -59,7 +59,7 @@ plot <- ggplot(data = levelNumbers(avg_per_component_melted), aes(x = componentN
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   labs(#title = "Average errors, fails and successes of test run attempts per component",
        x = element_blank(), y = "Average", fill = "Result") +
-  scale_fill_manual(values = c(colors[7], colors[12], colors[13]), labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
+  scale_fill_manual(values = c(colors[7], colors[12], colors[2]), labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
   geom_text(aes(label = ifelse(value > 0, paste0(round(value / total * 100, 0), " %\n(", round(value, 1), ")"), '')),
             color = ifelse(avg_per_component_melted$variable != "avg_errors", "black", "white"),
@@ -140,11 +140,11 @@ summary(result)
 
 plot <- ggplot(data = m, aes(x = componentIndex, y = total)) +
   theme_minimal() +
-  geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
+  geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[5], fill = colors[1]) +
   labs(#title = "Attempts per component for users that reached level 4",
        x = "Component", y = "Attempts") +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")
+  #geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[3])
 plot
 ggsave(filename = paste0(outputDir, "attempts_until_activation_trend.png"), plot, width = 10, height = 8)
 

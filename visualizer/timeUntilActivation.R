@@ -85,11 +85,11 @@ summary(result)
 
 ggplot(data = m, aes(x = componentIndex, y = value)) +
   theme_minimal() +
-  geom_boxplot(aes(x = componentName), alpha = 0.66, color = "gray") +
+  geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[5], fill = colors[1]) +
   labs(#title = "time per component for users that reached level 4",
        x = "Component", y = "time in min") +
-  geom_point() +
-  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  #geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = colors[3]) +
   expand_limits(y = 0)
 ggsave(filename = paste0(outputDir, "time_until_activation_trend.png"), width = 10, height = 8)
 

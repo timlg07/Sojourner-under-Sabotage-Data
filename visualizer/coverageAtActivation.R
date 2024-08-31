@@ -61,7 +61,7 @@ plot <- ggplot(data = cov_and_result, aes()) +
   geom_point(aes(x = fraction, y = alarm, color = "Alarm"), pch = 20, alpha = .5, size = 6, position = position_jitter(width = 0, height = 0.05)) +
   geom_smooth(aes(x = fraction, y = alarm, color = "Alarm"), method = "lm", se = FALSE, formula = y ~ x) +
   labs(x = "Test coverage", y = "Amount of events", color = "Result") +
-  scale_color_manual(values = colors[c(3, 7)], labels = c("Alarm", "Destroyed")) +
+  scale_color_manual(values = colors[c(3, 5)], labels = c("Alarm", "Destroyed")) +
   scale_y_continuous(breaks = seq(0, 13, 1), minor_breaks = numeric(0))
 plot
 ggsave(filename = paste0(outputDir, "coverage_vs_destroyed_or_alarm_regression.png"), width = 6, height = 4)
