@@ -111,22 +111,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = smells)) +
 plot
 ggsave(paste0(outputDir, "smells_by_gender.png"), width = 6, height = 4)
 t.test(performance$smells ~ performance$gender)
-# Shapiro-Wilk test for normality
-shapiro.test(performance$smells[performance$gender == "Male"])
-shapiro.test(performance$smells[performance$gender == "Female"])
-
-hist(performance$smells[performance$gender == "Male"], main="Histogram of Data", xlab="Values", ylab="Frequency", col="lightblue", border="black")
-hist(performance$smells[performance$gender == "Female"], main="Histogram of Data", xlab="Values", ylab="Frequency", col="lightblue", border="black")
-
-# Q-Q plot to visually inspect normality
-qqnorm(performance$smells[performance$gender == "Male"], main="Q-Q Plot of Data", xlab="Theoretical Quantiles", ylab="Sample Quantiles", col="blue", pch=19)
-qqline(performance$smells[performance$gender == "Male"], col="red")
-qqnorm(performance$smells[performance$gender == "Female"], main="Q-Q Plot of Data", xlab="Theoretical Quantiles", ylab="Sample Quantiles", col="blue", pch=19)
-qqline(performance$smells[performance$gender == "Female"], col="red")
-
-# Kolmogorov-Smirnov test for normality
-ks.test(performance$smells[performance$gender == "Male"], "pnorm", mean=mean(performance$smells[performance$gender == "Male"]), sd=sd(performance$smells[performance$gender == "Male"]))
-ks.test(performance$smells[performance$gender == "Female"], "pnorm", mean=mean(performance$smells[performance$gender == "Female"]), sd=sd(performance$smells[performance$gender == "Female"]))
+# Perform the Wilcoxon test (Mann-Whitney U test)
+wilcox.test(performance$smells ~ performance$gender)
 
 # 1.2) time_until_first_pass
 plot <- ggplot(data = performance, aes(x = gender, y = time_until_first_pass)) +
@@ -137,6 +123,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = time_until_first_pass)) +
 plot
 ggsave(paste0(outputDir, "time_until_first_pass_gender.png"), width = 6, height = 4)
 t.test(performance$time_until_first_pass ~ performance$gender)
+wilcox.test(performance$time_until_first_pass ~ performance$gender) # p-value = 0.004023 !
+
 # 1.3) time_until_activation
 plot <- ggplot(data = performance, aes(x = gender, y = time_until_activation)) +
   theme_minimal() +
@@ -145,6 +133,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = time_until_activation)) +
 plot
 #ggsave(paste0(outputDir, "time_until_activation.png"), width = 6, height = 4)
 t.test(performance$time_until_activation ~ performance$gender)
+wilcox.test(performance$time_until_activation ~ performance$gender) # p-value = 0.01912 !
+
 # 1.4.1) errors_until_first_pass
 plot <- ggplot(data = performance, aes(x = gender, y = errors_until_first_pass)) +
   theme_minimal() +
@@ -153,6 +143,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = errors_until_first_pass))
 plot
 #ggsave(paste0(outputDir, "errors_until_first_pass.png"), width = 6, height = 4)
 t.test(performance$errors_until_first_pass ~ performance$gender)
+wilcox.test(performance$errors_until_first_pass ~ performance$gender) # p-value = 0.06522
+
 # 1.4.2) fails_until_first_pass
 plot <- ggplot(data = performance, aes(x = gender, y = fails_until_first_pass)) +
   theme_minimal() +
@@ -161,6 +153,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = fails_until_first_pass)) 
 plot
 #ggsave(paste0(outputDir, "fails_until_first_pass.png"), width = 6, height = 4)
 t.test(performance$fails_until_first_pass ~ performance$gender)
+wilcox.test(performance$fails_until_first_pass ~ performance$gender) # p-value = 0.1489
+
 # 1.5) detection rate
 plot <- ggplot(data = performance, aes(x = gender, y = result)) +
   theme_minimal() +
@@ -169,6 +163,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = result)) +
   labs(x = "Gender", y = "Average Detection Rate")
 plot
 t.test(performance$result ~ performance$gender)
+wilcox.test(performance$result ~ performance$gender) # p-value = 0.3139
+
 # 1.6) level reached
 plot <- ggplot(data = performance, aes(x = gender, y = level_reached)) +
   theme_minimal() +
@@ -222,6 +218,8 @@ ggsave(paste0(outputDir, "level_reached_by_gender_area.png"), width = 6, height 
 #  labs(x = "Level Reached", y = "Density")
 # plot
 t.test(performance$level_reached ~ performance$gender)
+wilcox.test(performance$level_reached ~ performance$gender) # p-value = 0.01378 !
+
 # 1.7) debugging
 # 1.7.1) debugging time
 plot <- ggplot(data = performance, aes(x = gender, y = debugging_time)) +
@@ -230,6 +228,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = debugging_time)) +
   labs(x = "Gender", y = "Average Time spent Debugging")
 plot
 t.test(performance$debugging_time ~ performance$gender)
+wilcox.test(performance$debugging_time ~ performance$gender) # p-value = 0.4296
+
 # 1.7.2) debugging modifications
 plot <- ggplot(data = performance, aes(x = gender, y = debugging_modifications)) +
   theme_minimal() +
@@ -237,6 +237,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = debugging_modifications))
   labs(x = "Gender", y = "Average Amount of Modifications")
 plot
 t.test(performance$debugging_modifications ~ performance$gender)
+wilcox.test(performance$debugging_modifications ~ performance$gender) # p-value = 0.9016
+
 # 1.7.3) debugging hidden tests added
 plot <- ggplot(data = performance, aes(x = gender, y = debugging_hidden_tests_added)) +
   theme_minimal() +
@@ -244,6 +246,8 @@ plot <- ggplot(data = performance, aes(x = gender, y = debugging_hidden_tests_ad
   labs(x = "Gender", y = "Average Amount of Hidden Tests Added")
 plot
 t.test(performance$debugging_hidden_tests_added ~ performance$gender)
+wilcox.test(performance$debugging_hidden_tests_added ~ performance$gender) # p-value = 0.8964
+
 # 1.8) coverage
 plot <- ggplot(data = performance, aes(x = gender, y = coverage)) +
   theme_minimal() +
@@ -251,6 +255,7 @@ plot <- ggplot(data = performance, aes(x = gender, y = coverage)) +
   labs(x = "Gender", y = "Average Coverage")
 plot
 t.test(performance$coverage ~ performance$gender)
+wilcox.test(performance$coverage ~ performance$gender) # p-value = 0.734
 
 
 # 2) Experience with Programming --------------------------------
