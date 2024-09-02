@@ -38,7 +38,20 @@ plot <- ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n))
                       mutate(courseOfStudy = gsub("Lehramt", 'Education', courseOfStudy)) %>%
                       pull(courseOfStudy))
 plot
-ggsave(filename = paste0(outputDir, "course_of_study.png"), width = 6, height = 4)
+plot <- ggplot(data = course_of_study, aes(x = n, fill = courseOfStudy, y = "")) +
+  theme_minimal() +
+  geom_bar(stat = "identity") +
+  labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Course of study") +
+  geom_text(aes(label = ifelse(percentage > 5, paste(round(percentage, 0), "%"), '')), position = position_stack(vjust = 0.5)) +
+  scale_fill_manual(values = colors[-1],
+                    labels = course_of_study %>% # remove order prefix
+                      mutate(courseOfStudy = gsub("\\d+__", '', courseOfStudy)) %>%
+                      mutate(courseOfStudy = gsub("Informatik", 'Computer Science', courseOfStudy)) %>%
+                      mutate(courseOfStudy = gsub("Wirtschaftsinformatik", 'Business Informatics', courseOfStudy)) %>%
+                      mutate(courseOfStudy = gsub("Lehramt", 'Education', courseOfStudy)) %>%
+                      pull(courseOfStudy))
+plot
+ggsave(filename = paste0(outputDir, "course_of_study.png"), width = 6, height = 3)
 
 plot_dark <- plot + theme(text = element_text(colour = "white")) #, plot.background = element_rect(fill = "black"))
 ggsave(filename = paste0(presentationDir, "course_of_study_dark.png"), plot = plot_dark, width = 6, height = 4)
@@ -60,7 +73,13 @@ ggplot(data = gender, aes(x = "", fill = Gender, y = n)) +
   theme(panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank()) +
   geom_text(aes(label = paste0(Gender, "\n", round(percentage, 0), " %  (", n, ")")), position = position_stack(vjust = 0.5), color = "#444444") +
   scale_fill_manual(values = colors)
-ggsave(filename = paste0(outputDir, "gender.png"), width = 6, height = 4)
+ggplot(data = gender, aes(x = n, fill = Gender, y = "")) +
+  theme_minimal() +
+  geom_bar(stat = "identity") +
+  labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Gender") +
+  geom_text(aes(label = paste0(Gender, "\n", round(percentage, 0), " %  (", n, ")")), position = position_stack(vjust = 0.5), color = "#444444") +
+  scale_fill_manual(values = colors[c(2,1)])
+ggsave(filename = paste0(outputDir, "gender.png"), width = 5, height = 2)
 # ----
 
 # ---- PLOT --- Experience with Programming ------------

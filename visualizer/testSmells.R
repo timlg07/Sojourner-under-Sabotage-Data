@@ -83,7 +83,20 @@ plot <- ggplot(data = smells_melted_total, aes(x = "", y = value, fill = variabl
   # all colors except 5, 6, 7
   scale_fill_manual(values = colors[-c(5, 6, 7)])
 plot
-ggsave(paste0(outputDir, "test_smells_total_pie.png"), width = 6, height = 4)
+# same as barchart stacked
+plot <- ggplot(data = smells_melted_total, aes(x = value, y = "", fill = variable)) +
+  theme_minimal() +
+  # horizontal bar chart
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = ifelse(percentage > 8,
+                               paste0(variable, "\n", round(percentage, 0), "%", "  (", value, ")"),
+                               '')),
+            position = position_stack(vjust = .5), angle = 90, color = "black") +
+  labs(x = "", y = "", fill = "Test Smell Type") +
+  # all colors except 5, 6, 7
+  scale_fill_manual(values = colors[-c(5, 6, 7)])
+plot
+ggsave(paste0(outputDir, "test_smells_total_pie.png"), width = 6, height = 3)
 plot_dark <- plot + ggdark::dark_theme_minimal() + theme(plot.background = element_rect(color = NA), panel.grid = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank())
 ggsave(paste0(presentationDir, "test_smells_total_pie_dark.png"), plot_dark, width = 7, height = 5)
 
