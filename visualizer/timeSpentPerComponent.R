@@ -39,7 +39,7 @@ plot_time_spent <- function(time_df, box_plot_scale = .5) {
   plot <- ggplot(data = df_melted, aes(x = componentName, y = value, fill = variable, group = interaction(componentName, variable))) +
     theme_minimal() +
     geom_boxplot(width = box_plot_scale, color = "#888") +
-    stat_summary(fun = mean, geom = "text", aes(label = paste("\naverage:", round(..y.., 0), "min\n"), vjust = ifelse(variable == "1 Testing", 0.1, 0.9)), hjust = 0.5, angle = 90) +
+    stat_summary(fun = mean, geom = "text", color="black", aes(label = paste("\naverage:", round(..y.., 0), "min\n"), vjust = ifelse(variable == "1 Testing", 0.1, 0.9)), hjust = 0.5, angle = 90) +
     scale_fill_manual(values = colors[c(2,1)], labels = c("Testing", "Debugging")) +
     #scale_color_manual(values = colors[c(4,5)], labels = c("Testing", "Debugging")) +
     expand_limits(y = 45) +
@@ -51,7 +51,7 @@ plot_time_spent <- function(time_df, box_plot_scale = .5) {
 
 plot <- plot_time_spent(times)
 plot
-ggsave(filename = paste0(outputDir, "time_spent_per_component.png"), plot, width = 12, height = 8)
+ggsave(filename = paste0(outputDir, "time_spent_per_component.png"), plot, width = 8, height = 5)
 
 average_testing_time <- mean(times %>% filter(test > 0) %>% select(test) %>% unlist())
 average_debugging_time <- mean(times %>% filter(debug > 0) %>% select(debug) %>% unlist())
