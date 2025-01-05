@@ -1,19 +1,23 @@
 const data = require('./data.json');
+const { dataSince, excludeUsers } = require('./config.json');
 const save = require('./utils/save');
 const _filtered = data
     .map(item => {
         item.json = JSON.parse(item.json);
         return item;
     })
-    .filter(item => item.user.username !== 'test')
-    .filter(item => item.user.username !== 'admin')
-    .filter(item => item.user.username !== 'straubin')
+    .filter(item => excludeUsers.indexOf(item.user.username) === -1)
+    .filter(item => !dataSince || item.timestamp >= dataSince)
     .filter(item => item.eventType !== 'RoomUnlockedEvent' || !data.find(i => 
         i.eventType === 'RoomUnlockedEvent' && 
         item.user.username === i.user.username && 
         item.json.roomId === i.json.roomId && 
         item.id > i.id
     ))
+
+if (_filtered.length === 0) {
+    throw new Error('No data left after filtering. Maybe you specified a wrong timestamp in config.json?');
+}
 
 const didInteract = _filtered
     .reduce((acc, item) => {
