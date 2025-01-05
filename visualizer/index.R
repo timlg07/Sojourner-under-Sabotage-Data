@@ -23,6 +23,7 @@ main <- function(libPaths = .libPaths(), rDir = "visualizer/", entry = "index.R"
   list.files(path = rDir, pattern = ".+\\.R") %>%
     lapply(function(file) {
       if (file != entry) {
+        print(paste0("Executing ", file))
         source(paste0(rDir, file), local = TRUE)
       }
     })
