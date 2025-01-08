@@ -5,6 +5,8 @@ component_name_to_index <- function(component_name) {
          "GreenHouse" = return(3),
          "Kitchen" = return(4),
          "ReactorLog" = return(5),
+         "DefenseSystem" = return(6),
+         "RnaAnalyzer" = return(7),
   )
 }
 
