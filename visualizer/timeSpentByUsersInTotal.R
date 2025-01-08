@@ -94,7 +94,7 @@ users_not_in_total_time <- level_reached %>%
 
 
 # load survey data
-survey <- read.csv("./visualizer/survey.csv") %>%
+survey <- loadSurveyData() %>%
   select(user = "Username", gender = "Gender", java = "Experience.with.Java", programming = "Experience.with.programming..any.language.")
 total_time_demographics <- merge(total_time, survey, by = "user")
 

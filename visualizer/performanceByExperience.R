@@ -65,14 +65,15 @@ level_reached <- fromJSON(txt = "./visualizer/r_json/levelReached_r.json", flatt
   select(user, level_reached = value)
 
 ## -- Load survey data ---------------------------------
-survey <- read.csv("./visualizer/survey.csv")
+survey <- loadSurveyData()
 course_of_study <- survey %>%
-  select(courseOfStudy = What.is.your.course.of.study., user = Username) %>%
+  select(user = Username, courseOfStudy) %>%
   filter(courseOfStudy != "")
 experience <- survey %>%
   select(java = "Experience.with.Java", programming = "Experience.with.programming..any.language.", user = Username)
 gender <- survey %>%
-  select(gender = Gender, user = Username)
+  select(gender = Gender, user = Username) %>%
+  filter(gender != "Prefer not to say") # TODO: how to handle "Prefer not to say"?
 
 ## -- Merge data ---------------------------------
 performance <- merge(coverage, destroyed_or_alarm, by = "user") %>%

@@ -10,8 +10,7 @@ source("./visualizer/utils.R")
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
 if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
-survey <- read.csv("./visualizer/survey.csv") %>%
-  select(courseOfStudy = What.is.your.course.of.study., everything())
+survey <- loadSurveyData()
 
 # ---- PLOT --- Course of study ----
 course_of_study <- survey %>%
@@ -77,8 +76,10 @@ ggplot(data = gender, aes(x = n, fill = Gender, y = "")) +
   theme_minimal() +
   geom_bar(stat = "identity") +
   labs(title = element_blank(), x = element_blank(), y = element_blank(), fill = "Gender") +
-  geom_text(aes(label = paste0(Gender, "\n", round(percentage, 0), " %  (", n, ")")), position = position_stack(vjust = 0.5), color = "#444444") +
-  scale_fill_manual(values = colors[c(2,1)])
+  geom_text(
+    aes(label = ifelse (percentage > 5, paste0(Gender, "\n", round(percentage, 0), " %  (", n, ")"), "")),
+    position = position_stack(vjust = 0.5), color = "#444444") +
+  scale_fill_manual(values = c(colors[c(2,1)], rgb(.7,.7,.75)))
 ggsave(filename = paste0(outputDir, "gender.png"), width = 5, height = 2)
 # ----
 

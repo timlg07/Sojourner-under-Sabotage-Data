@@ -39,3 +39,22 @@ color_guide <- ggplot(data = data.frame(x = 1:length(colors), y = 1), aes(x = x,
   geom_bar(stat = "identity") +
   scale_fill_manual(values = colors, name = "Color")
 # color_guide
+
+loadSurveyData <- function() {
+  library(jsonlite)
+
+  survey <- read.csv("./visualizer/survey.csv") %>%
+    select(courseOfStudy = What.is.your.course.of.study., everything()) %>%
+    mutate(unix_seconds = as.numeric(as.POSIXct(Zeitstempel, format = "%d.%m.%Y %H:%M:%S")))
+  surveyST <- read.csv("./visualizer/surveyST.csv") %>%
+    select(courseOfStudy = What.is.your.course.of.study., everything()) %>%
+    mutate(unix_seconds = as.numeric(as.POSIXct(Zeitstempel, format = "%Y/%m/%d %H:%M:%S")))
+  survey <- bind_rows(survey, surveyST)
+
+  config <- fromJSON(txt = "./config.json", flatten = TRUE)
+  useDataSinceUnixSeconds <- as.numeric(config$dataSince) / 1000
+  survey <- survey %>%
+    filter(unix_seconds >= useDataSinceUnixSeconds)
+
+  return(survey)
+}
