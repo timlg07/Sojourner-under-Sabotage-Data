@@ -3,5 +3,6 @@
     "C:/Users/username/Documents/R/win-library/version",
     "C:/Program Files/R/R-version/library"
   ],
-  "outputDir": "C:/path/to/thesis/img/"
+  "outputDir": "C:/path/to/thesis/img/",
+  "presentationDir": "C:/path/to/thesis/presentation"
 }
