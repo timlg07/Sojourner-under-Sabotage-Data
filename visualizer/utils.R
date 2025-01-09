@@ -15,7 +15,8 @@ levelNumbers <- function(d) {
   for (i in 1:nrow(d)) {
     name <- as.character(d_$componentName[i])
     num <- component_name_to_index(name)
-    d_$componentName[i] <- paste0("Level ",num, "\n(", name, ")")
+    # d_$componentName[i] <- paste0("Level ",num, "\n(", name, ")")
+    d_$componentName[i] <- paste0("Level ",num)
   }
   return(d_)
 }
