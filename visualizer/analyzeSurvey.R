@@ -35,6 +35,7 @@ plot <- ggplot(data = course_of_study, aes(x = "", fill = courseOfStudy, y = n))
                       mutate(courseOfStudy = gsub("Informatik", 'Computer Science', courseOfStudy)) %>%
                       mutate(courseOfStudy = gsub("Wirtschaftsinformatik", 'Business Informatics', courseOfStudy)) %>%
                       mutate(courseOfStudy = gsub("Lehramt", 'Education', courseOfStudy)) %>%
+                      mutate(courseOfStudy = gsub("Education \\(Education\\)", 'Education', courseOfStudy)) %>%
                       pull(courseOfStudy))
 plot
 plot <- ggplot(data = course_of_study, aes(x = n, fill = courseOfStudy, y = "")) +
@@ -48,6 +49,7 @@ plot <- ggplot(data = course_of_study, aes(x = n, fill = courseOfStudy, y = ""))
                       mutate(courseOfStudy = gsub("Informatik", 'Computer Science', courseOfStudy)) %>%
                       mutate(courseOfStudy = gsub("Wirtschaftsinformatik", 'Business Informatics', courseOfStudy)) %>%
                       mutate(courseOfStudy = gsub("Lehramt", 'Education', courseOfStudy)) %>%
+                      mutate(courseOfStudy = gsub("Education \\(Education\\)", 'Education', courseOfStudy)) %>%
                       pull(courseOfStudy))
 plot
 ggsave(filename = paste0(outputDir, "course_of_study.png"), width = 6, height = 3)
