@@ -44,7 +44,7 @@ ggplot(data = avg_per_component, aes(x = componentName, group = 1)) +
 
 users <- nrow(avg_per_user)
 avg_per_component_melted <- melt(avg_per_component, id = c("componentName", "total"))
-ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
+ggplot(data = levelNumbers(avg_per_component_melted), aes(x = componentName, y = value, fill = variable, group = variable)) +
   theme_minimal() +
   geom_area(position = "stack") +
   scale_fill_manual(values = c("red", "orange", "green"), labels = c("Errors", "Fails", "Successes")) +
@@ -91,7 +91,7 @@ avg_per_component_only_users_that_reached_level4_total <- attempts %>%
   group_by(componentName) %>%
   summarise(avg_total = mean(errors + fails + successes))
 
-plot <- ggplot(data = avg_per_component_only_users_that_reached_level4_melted, aes(x = componentName)) +
+plot <- ggplot(data = levelNumbers(avg_per_component_only_users_that_reached_level4_melted), aes(x = componentName)) +
   theme_minimal() +
   geom_area(position = "stack", aes(y = value, fill = variable, group = variable)) +
   scale_fill_manual(values = c("red", "orange", "green"), labels = c("Errors", "Fails", "Successes")) +
@@ -138,7 +138,7 @@ summary(result)
 #ggpubr::ggballoonplot(as.data.frame(result$result))
 
 
-plot <- ggplot(data = m, aes(x = componentIndex, y = total)) +
+plot <- ggplot(data = levelNumbers(m), aes(x = componentIndex, y = total)) +
   theme_minimal() +
   geom_boxplot(aes(x = componentName), alpha = 0.66, color = colors[5], fill = colors[1]) +
   labs(#title = "Attempts per component for users that reached level 4",

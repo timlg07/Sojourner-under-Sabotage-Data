@@ -19,7 +19,7 @@ destroyed_or_alarm <- fromJSON(txt = "./visualizer/r_json/destroyedOrAlarm_r.jso
 
 
 ## -- Visualize coverage alone -------------------
-ggplot(data = coverage, aes(x = componentName, y = fraction)) +
+ggplot(data = levelNumbers(coverage), aes(x = componentName, y = fraction)) +
   theme_minimal() +
   geom_violin() +
   labs(x = "Component", y = "Coverage at activation")
@@ -30,7 +30,7 @@ ggsave(filename = paste0(outputDir, "coverage_at_activation.png"), width = 12, h
 cov_vs_doa <- merge(coverage, destroyed_or_alarm, by = c("user", "componentName")) %>%
   select(user, componentName, coverage = fraction, result = value)
 
-ggplot(data = cov_vs_doa %>% filter(componentName != "Kitchen"), aes(x = interaction(componentName, result), y = coverage)) +
+ggplot(data = cov_vs_doa %>% filter(componentName != "Kitchen") %>% levelNumbers(), aes(x = interaction(componentName, result), y = coverage)) +
   theme_minimal() +
   geom_violin(aes(fill = result), alpha = .5) +
   #geom_boxplot(width = .15, alpha = .25, fill = "white", color = "white") +
