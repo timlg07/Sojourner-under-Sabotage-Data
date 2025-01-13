@@ -4,7 +4,10 @@ library(dplyr)
 library(purrr)
 library(reshape2)
 
+source("./visualizer/utils.R")
+
 if (!exists("outputDir")) outputDir <- "./visualizer/out/"
+if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 time_testing <- fromJSON(txt = "./visualizer/r_json/timeUntilActivation_r.json", flatten = TRUE) %>%
   filter(value != "not finished") %>%
@@ -27,7 +30,7 @@ times <- merge(time_testing, time_debugging, by = c("user", "componentName"), al
 
 
 plot_time_spent <- function(time_df, box_plot_scale = .5) {
-  df_melted <- melt(time_df, id = c("user", "componentName")) %>%
+  df_melted <- melt(levelNumbers(time_df), id = c("user", "componentName")) %>%
     mutate(variable = ifelse(variable == "test", "1 Testing", "2 Debugging")) %>%
     filter(value > 0)
 

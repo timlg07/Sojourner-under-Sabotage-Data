@@ -11,6 +11,7 @@ if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 ## -- Load data ---------------------------------
 smells <- fromJSON(txt = "./visualizer/r_json/testSmellDetectorOutput_r.json", flatten = TRUE)
+smells <- levelNumbers(smells)
 ## ----------------------------------------------
 
 smells_melted <- melt(smells, id = c("componentName", "user")) %>%

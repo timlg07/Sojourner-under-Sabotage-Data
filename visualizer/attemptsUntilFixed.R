@@ -22,7 +22,7 @@ debugging_per_component <- debugging %>%
   summarise(avg_time = mean(deltaTime), avg_mod = mean(modifications),
             avg_exc = mean(executions), avg_hid = mean(hiddenTestsAdded))
 
-debugging_per_component_melted <- melt(debugging_per_component, id = "componentName")
+debugging_per_component_melted <- melt(levelNumbers(debugging_per_component), id = "componentName")
 
 ggplot(data = debugging_per_component_melted, aes(x = componentName, group = variable, y = value)) +
   theme_minimal() +
@@ -42,9 +42,9 @@ totals <- debugging %>%
   summarise(total_time = sum(deltaTime), total_mod = sum(modifications),
             total_exc = sum(executions), total_hid = sum(hiddenTestsAdded))
 
-debugging_melted <- melt(debugging, id = c("componentName", "user")) %>%
+debugging_melted <- melt(levelNumbers(debugging), id = c("componentName", "user")) %>%
   filter(variable != "executions")
-plot <- ggplot(data = levelNumbers(debugging_melted), aes(x = componentName, y = value, color = variable, fill = variable, group = interaction(componentName, variable))) +
+plot <- ggplot(data = debugging_melted, aes(x = componentName, y = value, color = variable, fill = variable, group = interaction(componentName, variable))) +
   theme_minimal() +
   #geom_violin() +
   geom_boxplot(width = .5) +

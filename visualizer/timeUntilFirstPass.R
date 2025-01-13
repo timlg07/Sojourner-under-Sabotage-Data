@@ -25,7 +25,7 @@ avg_per_user <- time %>%
 
 users <- nrow(avg_per_user)
 avg_per_component_melted <- melt(avg_per_component, id = "componentName")
-ggplot(data = avg_per_component_melted, aes(x = componentName, y = value, fill = variable, group = variable)) +
+ggplot(data = levelNumbers(avg_per_component_melted), aes(x = componentName, y = value, fill = variable, group = variable)) +
   theme_minimal() +
   geom_line() +
   labs(#title = paste0("Average time until activation per user & component (total users: ", users, ")"),
@@ -50,7 +50,7 @@ avg_per_component_only_users_that_reached_level4_total <- time %>%
   group_by(componentName) %>%
   summarise(avg_time = mean(value))
 
-ggplot(data = avg_per_component_only_users_that_reached_level4, aes(x = componentName, y = avg_time, group = 1)) +
+ggplot(data = levelNumbers(avg_per_component_only_users_that_reached_level4), aes(x = componentName, y = avg_time, group = 1)) +
   theme_minimal() +
   geom_line() +
   # geom_bar(stat = "identity", fill = "blue", color = "blue", alpha = .5, data = avg_per_component_only_users_that_reached_level4_total, aes(x = componentName, y = avg_total, color = "blue")) +
@@ -91,7 +91,7 @@ summary(result)
 #ggpubr::ggballoonplot(as.data.frame(contingency_table))
 #ggpubr::ggballoonplot(as.data.frame(result$result))
 
-plot <- ggplot(data = time, aes(x = componentName, y = value)) +
+plot <- ggplot(data = levelNumbers(time), aes(x = componentName, y = value)) +
   geom_point() +
   geom_boxplot(alpha = 0.25, color = "gray")
 plot
