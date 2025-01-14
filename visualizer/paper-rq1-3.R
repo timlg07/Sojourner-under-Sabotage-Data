@@ -37,6 +37,7 @@ plot <- ggplot(data = levelNumbers(avg_per_component_melted), aes(x = componentN
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
   geom_text(aes(label = ifelse(value > 0, paste0(round(value / total * 100, 0), " %\n(", round(value, 1), ")"), '')),
             color = ifelse(avg_per_component_melted$variable != "avg_errors", "black", "white"),
-            position = position_stack(vjust = 0.5), size = 3)
+            position = position_stack(vjust = 0.5), size = 3) +
+  theme(legend.position = "bottom")
 plot
 ggsave(filename = paste0(outputDir, "paper/rq1_3_attempts_until_activation_avg_per_component.png"), width = 10, height = 5)
