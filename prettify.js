@@ -1,5 +1,5 @@
 const data = require('./data.json');
-const { dataSince, excludeUsers } = require('./config.json');
+const { dataSince, dataUntil, excludeUsers } = require('./config.json');
 const save = require('./utils/save');
 const _filtered = data
     .map(item => {
@@ -8,6 +8,7 @@ const _filtered = data
     })
     .filter(item => excludeUsers.indexOf(item.user.username) === -1)
     .filter(item => !dataSince || item.timestamp >= dataSince)
+    .filter(item => !dataUntil || item.timestamp <= dataUntil)
     .filter(item => item.eventType !== 'RoomUnlockedEvent' || !data.find(i => 
         i.eventType === 'RoomUnlockedEvent' && 
         item.user.username === i.user.username && 

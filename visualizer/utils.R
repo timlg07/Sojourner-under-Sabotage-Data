@@ -56,8 +56,10 @@ loadSurveyData <- function() {
 
   config <- fromJSON(txt = "./config.json", flatten = TRUE)
   useDataSinceUnixSeconds <- as.numeric(config$dataSince) / 1000
+  useDataUntilUnixSeconds <- as.numeric(config$dataUntil) / 1000
   survey <- survey %>%
-    filter(unix_seconds >= useDataSinceUnixSeconds)
+    filter(unix_seconds >= useDataSinceUnixSeconds) %>%
+    filter(unix_seconds <= useDataUntilUnixSeconds)
 
   return(survey)
 }
