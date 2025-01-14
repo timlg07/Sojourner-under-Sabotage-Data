@@ -55,11 +55,12 @@ plot_time_spent <- function(time_df, box_plot_scale = .5) {
     ), hjust = 0.5, angle = 90) +
     scale_fill_manual(values = colors[c(2,1,3)], labels = c("Testing", "Debugging", "Total")) +
     expand_limits(y = 40) +
-    labs(title = paste0("Total time spent on each type of tasks per component \n(", user_count, " players considered)"),
+    labs(title = element_blank(), #paste0("Total time spent on each type of tasks per component \n(", user_count, " players considered)"),
          x = element_blank(),#"Level",
          y = "Time spent in minutes",
          fill = "Type of tasks",
-         group = "Type of tasks")
+         group = "Type of tasks") +
+    theme(legend.position = "bottom")
   return(plot)
 }
 plot <- plot_time_spent(times)

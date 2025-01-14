@@ -28,7 +28,7 @@ prints_per_component_total <- prints %>% # use prints_non_zero to exclude compon
 plot <- ggplot(data = levelNumbers(prints_per_component_total), aes(x = componentName, y = total)) +
   theme_minimal() +
   geom_bar(stat = "identity", fill = colors[1]) +
-  labs(x = element_blank(), y = "Total amount of prints added") +
+  labs(x = element_blank(), y = "Number of prints added") +
   scale_y_continuous(breaks = seq(0, 100, 1)) +
   geom_text(aes(label = paste("Total:", total)), vjust = 2, size = 3, color = "white")
 plot

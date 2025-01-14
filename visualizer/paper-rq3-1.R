@@ -36,6 +36,7 @@ plot <- ggplot(data = debugging_melted, aes(x = componentName, y = value, color 
   labs(x = element_blank(), y = "Time spent in minutes", fill = "Type of metric", group = "Type of metric") +
   scale_color_manual(values = c(colors[4], colors[5], colors[7]), labels = c("Time", "Modifications", "Hidden tests added"), name = "Type of metric") +
   scale_fill_manual(values = c(colors[2], colors[1], colors[12]), labels = c("Time", "Modifications", "Hidden tests added"), name = "Type of metric") +
-  scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 100, 2)), breaks = seq(0, 100, 2))
+  scale_y_continuous(sec.axis = sec_axis(~., name = "Amount", breaks = seq(0, 100, 2)), breaks = seq(0, 100, 2)) +
+  theme(legend.position = "bottom")
 plot
 ggsave(filename = paste0(outputDir, "paper/rq3_1_debugging_performance_per_component_boxplots.png"), width = 7, height = 4)

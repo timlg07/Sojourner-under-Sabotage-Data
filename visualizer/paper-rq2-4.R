@@ -37,7 +37,8 @@ plot <- ggplot(data = levelNumbers(percentages), aes(x = componentName, y = perc
   theme_minimal() +
   geom_bar(stat = "identity", position = "stack") +
   labs(#title = "Percentage of destroyed or alarm events per component",
-    x = element_blank(), y = "Percentage", fill = "Result") +
+    x = element_blank(), y = element_blank(), fill = "Result") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
   scale_fill_manual(values = c("#ddd", colors[1]), labels = c("Destroyed (Mutant not detected)", "Alarm (Mutant detected)")) +
   theme(legend.position = "bottom")
 plot + geom_text(aes(label = count), size = 3, position = position_stack(vjust = .5))

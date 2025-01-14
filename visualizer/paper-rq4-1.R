@@ -33,5 +33,7 @@ all <- survey %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
 # add numbers to all questions
 colnames(all) <- sprintf("(Q%02d) %s", seq(1, 14), colnames(all))
-gglikert(all) + scale_fill_manual(values = colors[-1])
-ggsave(filename = paste0(outputDir, "paper/rq4_1_survey_likert_plots.png"), width = 9, height = 9)
+gglikert(all) +
+  scale_fill_manual(values = colors[-1]) +
+  theme(legend.position = "bottom", legend.justification = "left")
+ggsave(filename = paste0(outputDir, "paper/rq4_1_survey_likert_plots.png"), width = 11, height = 9)
