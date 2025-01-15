@@ -38,4 +38,13 @@ plot <- ggplot(data = levelNumbers(methods_per_component_avg), aes(x = component
     filter(componentName == as.character(componentName)) %>%
     pull(total))), vjust = 1.5, size = 3, color = "white")
 plot + geom_text(aes(label = paste("Average:", round(avg, 1))), vjust = -0.5, size = 3)
-ggsave(paste0(outputDir, "paper/rq2_3_amount_of_test_methods_per_component.png"), width = 5, height = 3.5)
+
+#violins
+plot <- ggplot(data = levelNumbers(methods), aes(x = componentName, y = value)) +
+  theme_minimal() +
+  geom_violin(color = "transparent", fill = colors[1], alpha = .5) +
+  geom_boxplot(width = .1, color = colors[5], fill = "white") +
+  labs(x = element_blank(), y = "Number of tests") +
+  scale_y_continuous(breaks = seq(0, 20, 1))
+plot
+ggsave(paste0(outputDir, "paper/rq2_3_number_of_test_methods_per_component_per_user_per_component.png"), width = 5, height = 4)
