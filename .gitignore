@@ -11,6 +11,7 @@ TestSmellDetector.jar
 !data.json
 !survey.csv
 !surveyST.csv
+!mutations.csv
 
 /visualizer/config.json
 !/visualizer/example.config.json
