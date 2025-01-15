@@ -63,3 +63,23 @@ loadSurveyData <- function() {
 
   return(survey)
 }
+loadSurveySEData <- function() {
+  surveySE <- read.csv("./visualizer/survey.csv") %>%
+    select(courseOfStudy = What.is.your.course.of.study., everything()) %>%
+    mutate(unix_seconds = as.numeric(as.POSIXct(Zeitstempel, format = "%d.%m.%Y %H:%M:%S"))) %>%
+    select(starts_with("Please.specify.your.level.of.agreement")) %>%
+    rename_with(~gsub("Please\\.specify\\.your\\.level\\.of\\.agreement\\.+", "", .x)) %>%
+    rename_with(~gsub("\\.+", " ", .x)) %>%
+    rename_with(~gsub("learned practised", "learned/practised", .x))
+  return(surveySE)
+}
+loadSurveySTData <- function() {
+  surveyST <- read.csv("./visualizer/surveyST.csv") %>%
+    select(courseOfStudy = What.is.your.course.of.study., everything()) %>%
+    mutate(unix_seconds = as.numeric(as.POSIXct(Zeitstempel, format = "%Y/%m/%d %H:%M:%S"))) %>%
+    select(starts_with("Please.specify.your.level.of.agreement")) %>%
+    rename_with(~gsub("Please\\.specify\\.your\\.level\\.of\\.agreement\\.+", "", .x)) %>%
+    rename_with(~gsub("\\.+", " ", .x)) %>%
+    rename_with(~gsub("learned practised", "learned/practised", .x))
+  return(surveyST)
+}
