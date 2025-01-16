@@ -83,3 +83,22 @@ loadSurveySTData <- function() {
     rename_with(~gsub("learned practised", "learned/practised", .x))
   return(surveyST)
 }
+
+splitDataByTestGroup <- function (data) {
+  survey_users_ST <- read.csv("./visualizer/surveyST.csv") %>%
+    select(user = Username) %>%
+    distinct()
+  survey_users_SE <- read.csv("./visualizer/survey.csv") %>%
+    select(user = Username) %>%
+    distinct()
+
+  data_ST <- data %>%
+    inner_join(survey_users_ST, by = "user")
+  data_SE <- data %>%
+    inner_join(survey_users_SE, by = "user")
+
+  combined <- mutate(data_ST, group = "1_ST") %>%
+    bind_rows(mutate(data_SE, group = "2_SE"))
+
+  return(combined)
+}

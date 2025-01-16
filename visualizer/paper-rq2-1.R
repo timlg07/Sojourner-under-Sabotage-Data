@@ -47,23 +47,9 @@ mutation_score <- pit_data %>%
 
 # Intersect with current users ------------------------------------------------#
 
-survey_users_ST <- read.csv("./visualizer/surveyST.csv") %>%
-  select(user = Username) %>%
-  distinct()
-survey_users_SE <- read.csv("./visualizer/survey.csv") %>%
-  select(user = Username) %>%
-  distinct()
-
-mutation_score_ST <- mutation_score %>%
-  inner_join(survey_users_ST, by = "user")
-mutation_score_SE <- mutation_score %>%
-  inner_join(survey_users_SE, by = "user")
-
-combined <- mutate(mutation_score_ST, group = "1_ST") %>%
-  bind_rows(mutate(mutation_score_SE, group = "2_SE"))
-
-# filter out components with only one data point:
-mutation_score <- combined %>%
+mutation_score <- mutation_score %>%
+  splitDataByTestGroup() %>%
+  # filter out components with only one data point:
   group_by(componentName, group) %>%
   filter(n() > 1) %>%
   ungroup()
