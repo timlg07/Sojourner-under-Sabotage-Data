@@ -44,22 +44,33 @@ surveySE <- loadSurveySEData() %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
 surveyST <- loadSurveySTData() %>%
   mutate(across(everything(), ~factor(.x, levels = likert_levels_all)))
-combined <- mutate(surveySE, dataset = "SE") %>%
-  bind_rows(mutate(surveyST, dataset = "ST"))
+combined <- mutate(surveySE, group = "SE") %>%
+  bind_rows(mutate(surveyST, group = "ST"))
 gglikert(
   combined,
   include = colnames(surveySE),
   #`I enjoyed playing Sojourner under Sabotage `:`Debugging got easier from room to room `,
   y = "group",
   facet_rows = vars(.question),
-  add_labels = FALSE
+  add_labels = FALSE,
+  labels_size = 3.5,
 ) +
   facet_wrap(~.question, ncol = 1) +
   scale_fill_manual(values = colors[-1]) +
-  theme(legend.position = "bottom") +
-  # change facet background color
   theme(
+    # legend bottom
+    legend.position = "bottom",
+    # change facet background color
     strip.background = element_rect(fill = rgb(0.9, 0.9, 0.9, 1)),
-    strip.text = element_text(color = "black", size = 11)
+    strip.text = element_text(color = "black", size = 13),
+    # font size
+    text = element_text(size = 13),
+    legend.text = element_text(size = 13),
+    legend.title = element_text(size = 13),
+    axis.text = element_text(size = 13),
+    axis.title = element_text(size = 13),
+    # percentages font size
+    strip.text.x = element_text(size = 13),
+    strip.text.y = element_text(size = 13)
   )
 ggsave(filename = paste0(outputDir, "paper/rq4_2_survey_likert_plots_combined.png"), width = 9, height = 13)
