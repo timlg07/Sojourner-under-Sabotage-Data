@@ -47,34 +47,43 @@ mutation_score <- pit_data %>%
 
 # Intersect with current users ------------------------------------------------#
 
-survey_users <- loadSurveyData() %>%
+survey_users_ST <- read.csv("./visualizer/surveyST.csv") %>%
+  select(user = Username) %>%
+  distinct()
+survey_users_SE <- read.csv("./visualizer/survey.csv") %>%
   select(user = Username) %>%
   distinct()
 
-mutation_score <- mutation_score %>%
-  inner_join(survey_users, by = "user")
+mutation_score_ST <- mutation_score %>%
+  inner_join(survey_users_ST, by = "user")
+mutation_score_SE <- mutation_score %>%
+  inner_join(survey_users_SE, by = "user")
+
+combined <- mutate(mutation_score_ST, group = "1_ST") %>%
+  bind_rows(mutate(mutation_score_SE, group = "2_SE"))
 
 # filter out components with only one data point:
-mutation_score <- mutation_score %>%
-  group_by(componentName) %>%
+mutation_score <- combined %>%
+  group_by(componentName, group) %>%
   filter(n() > 1) %>%
   ungroup()
 
 
-  # Group by component and user -------------------------------------------------#
+# Group by component and user -------------------------------------------------#
 
-  mutation_score_per_user <- mutation_score %>%
+mutation_score_per_user <- mutation_score %>%
   group_by(user) %>%
   summarise(
     total = sum(total),
     killed = sum(killed),
     survived = sum(survived),
-    no_coverage = sum(no_coverage)
+    no_coverage = sum(no_coverage),
+    group = first(group)
   ) %>%
   mutate(score = killed / total)
 
 mutation_score_per_component <- mutation_score %>%
-  group_by(componentName) %>%
+  group_by(componentName, group) %>%
   summarise(
     total = sum(total),
     killed = sum(killed),
@@ -87,27 +96,37 @@ mutation_score_per_component <- mutation_score %>%
 # Plot ------------------------------------------------------------------------#
 
 # per component
-plot <- ggplot(data = mutation_score_per_component, aes(x = componentName, y = score)) +
+plot <- ggplot(data = mutation_score_per_component, aes(
+  x = componentName,
+  y = score,
+  fill = group,
+  group = interaction(componentName, group)
+)) +
   theme_minimal() +
-  geom_bar(stat = "identity", fill = colors[1]) +
+  geom_bar(stat = "identity", position = position_dodge(preserve = "single")) +
   labs(
     title = element_blank(), #"Mutation score per component",
     x = element_blank(), #"Component",
     y = "Mutation coverage"
   ) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
-  geom_text(aes(label = ifelse(score > 0, paste0(round(score * 100, 0), " %"), '')),
-            position = position_stack(vjust = 0.5), size = 3)
+  scale_fill_manual(values = colors[1:2], labels = c("ST", "SE"))
 plot
 ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_per_component_bar.png"), width = 10, height = 8)
 
-ggplot(data = mutation_score, aes(x = componentName, y = score)) +
+ggplot(data = mutation_score, aes(
+  x = componentName, y = score,
+  fill = group,
+  group = interaction(componentName, group)
+)) +
   theme_minimal() +
-  geom_violin(color = "transparent", fill = colors[1], alpha = .5) +
-  geom_boxplot(width = .1, color = colors[5], fill = "white") +
+  geom_violin(color = "transparent", alpha = .5, width = 1.25, position = position_dodge(width = 1, preserve = "single")) +
+  geom_boxplot(width = .2, position = position_dodge(preserve = "single", width = 1), color = "white") +
   labs(x = element_blank(), y = "Mutation coverage") +
-  scale_y_continuous(labels = scales::percent_format(scale = 100))
-ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_per_component_violin.png"), width = 10, height = 8)
+  scale_y_continuous(labels = scales::percent_format(scale = 100)) +
+  scale_fill_manual(values = colors[1:2], labels = c("ST", "SE")) +
+  scale_color_manual(values = colors[1:2], labels = c("ST", "SE"))
+ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_per_component_violin.png"), width = 11, height = 8)
 
 # relation coverage
 coverage <- fromJSON(txt = "./visualizer/r_json/coverageAtActivation_r.json", flatten = TRUE) %>%
