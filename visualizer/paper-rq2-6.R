@@ -34,7 +34,8 @@ smells_melted_total <- smells_melted %>%
   mutate(variable = factor(variable, levels = unique(variable)))
 
 smells_melted_by_component_total <- smells_melted %>%
-  group_by(componentName, variable) %>%
+  splitDataByTestGroup() %>%
+  group_by(componentName, variable, group) %>%
   summarise(value = sum(value)) %>%
   # add percentage values
   mutate(total = sum(value)) %>%
@@ -52,20 +53,27 @@ smells_melted_by_component_mean <- smells_melted %>%
   mutate(total = sum(value)) %>%
   mutate(percentage = value / total * 100)
 
-plot_smells <- function(data) {
-  return(
-    ggplot(data = data, aes(x = componentName, y = value, fill = variable, group = variable)) +
-      theme_minimal() +
-      geom_bar(stat = "identity", position = "stack") +
-      labs(x = element_blank(), y = "Number of Test Smells", fill = "Test Smell Type") +
-      geom_text(aes(label = ifelse(percentage >= 3 & value > 9,
-                                   paste0(round(percentage, 0), "% (", round(value, 0), ")"),
-                                   '')),
-                size = 3, position = position_stack(vjust = .5), color = "black") +
-      scale_fill_manual(values = colors[-c(5, 6, 7)])
-  )
-}
 
-plot <- plot_smells(smells_melted_by_component_total)
-plot
-ggsave(paste0(outputDir, "paper/rq2_6_test_smells_per_level.png"), width = 10, height = 5)
+ggplot(data = smells_melted_by_component_total, aes(
+  x = group,
+  y = value,
+  fill = variable,
+  group = variable
+)) +
+  theme_minimal() +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = element_blank(), y = "Number of Test Smells", fill = "Test Smell Type") +
+  # geom_text(aes(label = ifelse(percentage >= 3 & value > 9,
+  #                              paste0(round(percentage, 0), "% (", round(value, 0), ")"),
+  #                              '')),
+  #           size = 3, position = position_stack(vjust = .5), color = "black") +
+  scale_fill_manual(values = colors[-c(5, 6, 7)]) +
+
+  scale_x_discrete(labels = c("ST", "SE")) +
+  facet_grid(~ componentName, switch = "x") +
+  theme(panel.spacing.x = grid::unit(2, "mm"),
+        strip.placement = "outside",
+        strip.background = element_blank()
+  )
+
+ggsave(paste0(outputDir, "paper/rq2_6_combined_test_smells_per_level.png"), width = 10, height = 5)
