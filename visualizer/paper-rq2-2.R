@@ -17,12 +17,43 @@ if (!exists("presentationDir")) presentationDir <- "./visualizer/out/"
 
 # (2) Coverage per component --------------------------------------------------#
 
-coverage <- fromJSON(txt = "./visualizer/r_json/coverageAtActivation_r.json", flatten = TRUE)
+coverage <- fromJSON(txt = "./visualizer/r_json/coverageAtActivation_r.json", flatten = TRUE) %>%
+  levelNumbers() %>%
+  splitDataByTestGroup()
 
-ggplot(data = levelNumbers(coverage), aes(x = componentName, y = fraction)) +
+ggplot(data = coverage, aes(x = group, y = fraction, fill = group)) +
   theme_minimal() +
-  geom_violin(fill = colors[1], width = 1, color = colors[1]) +
-  geom_boxplot(width = .1, fill = "white", color = colors[5]) +
+  geom_violin(width = 1, alpha = .5, color = "transparent") +
+  scale_fill_manual(values = colors[1:2]) +
+  geom_boxplot(width = .2, color = "white", aes(fill = group)) +
+  scale_color_manual(values = colors[1:2]) +
   scale_y_continuous(labels = scales::percent_format(scale = 100), limits = c(0.5, 1)) +
-  labs(x = element_blank(), y = "Coverage at activation")
-ggsave(filename = paste0(outputDir, "paper/rq2_2_coverage_at_activation_per_component.png"), width = 12, height = 8)
+  labs(x = element_blank(), y = "Coverage at activation") +
+  scale_x_discrete(labels = c("ST", "SE")) +
+
+  facet_grid(~ componentName, switch = "x") +
+  theme(panel.spacing.x = grid::unit(2, "mm"),
+        strip.placement = "outside",
+        strip.background = element_blank(),
+        legend.position = "none"
+  )
+
+ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation_per_component.png"), width = 12, height = 8)
+
+
+
+# ggplot(data = coverage, aes(
+#   x = componentName, y = fraction,
+#   fill = group,
+#   group = interaction(componentName, group)
+# )) +
+#   theme_minimal() +
+#   geom_violin(color = "transparent", alpha = .5, width = 1.25, position = position_dodge(width = 1, preserve = "single")) +
+#   geom_boxplot(width = .2, position = position_dodge(preserve = "single", width = 1), color = "white") +
+#   labs(x = element_blank(), y = "Coverage at activation") +
+#   scale_y_continuous(labels = scales::percent_format(scale = 100), limits = c(0.5, 1)) +
+#   scale_fill_manual(values = colors[1:2], labels = c("ST", "SE")) +
+#   scale_color_manual(values = colors[1:2], labels = c("ST", "SE")) +
+#   theme(legend.position = "bottom")
+#
+# ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation_per_component__old_design.png"), width = 12, height = 8)
