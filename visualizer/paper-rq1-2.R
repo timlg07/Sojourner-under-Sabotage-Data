@@ -40,32 +40,47 @@ total_time <- inner_join(total_testing_per_user, total_debugging_per_user, by = 
 total_time$test <- total_time$total_time.x
 total_time$debug <- total_time$total_time.y
 total_time$other <- 60 - total_time$test - total_time$debug
+total_time <- total_time %>%
+  filter(test + debug < 55) %>% # continued playing at home
+  filter(test + debug > 25) # not finished playing
 total_time <- total_time[, c("user", "test", "debug", "other")]
 
-plot_time_spent <- function (total_time_df, box_plot_scale = .15, show_mean = TRUE) {
-  total_time_melted <- melt(total_time_df, id = "user")
+total_time_melted <- melt(total_time, id = "user") %>%
+  splitDataByTestGroup()
 
-  plot <- ggplot(data = total_time_melted, aes(x = variable, y = value, fill = variable, group = variable)) +
-    theme_minimal() +
-    geom_violin(alpha = .5, color = "transparent") +
-    geom_boxplot(width = box_plot_scale, color = "white") +
-    labs(#title = paste0("Total time spent on each type of tasks per user (", nrow(total_time_df), " users considered)"),
-      x = "Type of tasks", y = "Time spent in minutes", fill = "Type of tasks", group = "Type of tasks") +
-    scale_fill_manual(values = colors[c(3, 1, 4)], labels = c("Testing", "Debugging", "Other")) +
-    scale_x_discrete(labels = c("Testing", "Debugging", "Other")) +
-    expand_limits(y = 0) +
-    theme(legend.position = "none")
+plot <- ggplot(data = total_time_melted, aes(
+  x = group,
+  y = value,
+  fill = variable,
+  group = interaction(group, variable)
+)) +
+  theme_minimal() +
+  geom_violin(alpha = .5, color = "transparent") +
+  geom_boxplot(width = .15, color = "white") +
+  labs(x = element_blank(), y = "Time spent in minutes", fill = "Type of tasks", group = "Type of tasks") +
+  scale_fill_manual(values = colors[c(3, 1, 4)], labels = c("Testing", "Debugging", "Other")) +
+  scale_x_discrete(labels = c("ST", "SE")) +
+  expand_limits(y = 0) +
+  theme(legend.position = "none")+
+  facet_grid(~ variable, switch = "x", labeller = as_labeller(c(
+    "test" = "Testing",
+    "debug" = "Debugging",
+    "other" = "Other"
+  ))) +
+  theme(panel.spacing.x = grid::unit(0, "mm"),
+        strip.placement = "outside",
+        strip.background = element_blank(),
+  )
 
-  if (show_mean) {
-    # show mean value at the center of the boxplot
-    plot <- plot +
-      stat_summary(fun = mean, geom = "point", size = 1, color = "black") +
-      stat_summary(fun = mean, geom = "text", aes(label = paste("average:\n", round(after_stat(y), 0), "min")), vjust = -.25, color = "black")
-  }
 
-  return(plot)
-}
-
-plot <- plot_time_spent(total_time)
 plot
-ggsave(filename = paste0(outputDir, "paper/rq1_2_time_spent_on_tasks.png"), plot, width = 5, height = 4)
+ggsave(filename = paste0(outputDir, "paper/rq1_2_combined_time_spent_on_tasks.png"), plot, width = 5, height = 4)
+
+# show mean value at the center of the boxplot
+plot <- plot +
+  stat_summary(fun = mean, geom = "point", size = 1, color = "black") +
+  stat_summary(fun = mean, geom = "text", aes(label = paste("average:\n", round(after_stat(y), 0), "min")), vjust = -.25, color = "black")
+
+
+plot
+ggsave(filename = paste0(outputDir, "paper/rq1_2_combined_time_spent_on_tasks_with_mean.png"), plot, width = 5, height = 4)
