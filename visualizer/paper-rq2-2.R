@@ -21,12 +21,12 @@ coverage <- fromJSON(txt = "./visualizer/r_json/coverageAtActivation_r.json", fl
   levelNumbers() %>%
   splitDataByTestGroup()
 
-ggplot(data = coverage, aes(x = group, y = fraction, fill = group)) +
+ggplot(data = coverage, aes(x = group, y = fraction, fill = group, color = group)) +
   theme_minimal() +
   geom_violin(width = 1, alpha = .5, color = "transparent") +
+  geom_boxplot(width = .2) +
   scale_fill_manual(values = colors[1:2]) +
-  geom_boxplot(width = .2, color = "white", aes(fill = group)) +
-  scale_color_manual(values = colors[1:2]) +
+  scale_color_manual(values = colors[c(5,4)]) +
   scale_y_continuous(labels = scales::percent_format(scale = 100), limits = c(0.5, 1)) +
   labs(x = element_blank(), y = "Coverage at activation") +
   scale_x_discrete(labels = c("ST", "SE")) +
