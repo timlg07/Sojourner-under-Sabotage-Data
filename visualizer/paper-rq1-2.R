@@ -62,6 +62,7 @@ plot <- ggplot(data = total_time_melted, aes(
   scale_x_discrete(labels = c("ST", "SE")) +
   expand_limits(y = 0) +
   theme(legend.position = "none")+
+
   facet_grid(~ variable, switch = "x", labeller = as_labeller(c(
     "test" = "Testing",
     "debug" = "Debugging",
