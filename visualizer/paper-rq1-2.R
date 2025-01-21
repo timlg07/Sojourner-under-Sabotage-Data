@@ -59,7 +59,7 @@ plot <- ggplot(data = total_time_melted, aes(
   geom_boxplot(width = .15, color = "white") +
   labs(x = element_blank(), y = "Time spent in minutes", fill = "Type of tasks", group = "Type of tasks") +
   scale_fill_manual(values = colors[c(3, 1, 4)], labels = c("Testing", "Debugging", "Other")) +
-  scale_x_discrete(labels = c("ST", "SE")) +
+  scale_x_discrete(labels = c("SE", "ST")) +
   expand_limits(y = 0) +
   theme(legend.position = "none")+
 

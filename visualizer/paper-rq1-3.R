@@ -42,7 +42,7 @@ plot <- ggplot(data = levelNumbers(avg_per_component_melted), aes(
   scale_fill_manual(values = c(colors[7], colors[12], colors[2]),
                     labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
-  scale_x_discrete(labels = c("ST", "SE")) +
+  scale_x_discrete(labels = c("SE", "ST")) +
 
   # using $variable inside color= is buggy when using facet_grid, so do it twice i I guess
   geom_text(aes(label = ifelse(variable == "avg_errors",

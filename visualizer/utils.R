@@ -97,8 +97,8 @@ splitDataByTestGroup <- function (data) {
   data_SE <- data %>%
     inner_join(survey_users_SE, by = "user")
 
-  combined <- mutate(data_ST, group = "1_ST") %>%
-    bind_rows(mutate(data_SE, group = "2_SE"))
+  combined <- mutate(data_ST, group = "2_ST") %>%
+    bind_rows(mutate(data_SE, group = "1_SE"))
 
   return(combined)
 }

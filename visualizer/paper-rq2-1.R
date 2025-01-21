@@ -96,7 +96,7 @@ plot <- ggplot(data = mutation_score_per_component, aes(
     y = "Mutation coverage"
   ) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
-  scale_fill_manual(values = colors[1:2], labels = c("ST", "SE")) +
+  scale_fill_manual(values = colors[1:2], labels = c("SE", "ST")) +
   theme(legend.position = "bottom")
 plot
 ggsave(filename = paste0(outputDir, "paper/rq2_1_combined_mutation_score_per_component_bar.png"), width = 10, height = 8)
@@ -111,8 +111,8 @@ ggplot(data = mutation_score, aes(
   geom_boxplot(width = .2, position = position_dodge(preserve = "single", width = 1), color = "white") +
   labs(x = element_blank(), y = "Mutation coverage") +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
-  scale_fill_manual(values = colors[1:2], labels = c("ST", "SE")) +
-  scale_color_manual(values = colors[1:2], labels = c("ST", "SE")) +
+  scale_fill_manual(values = colors[1:2], labels = c("SE", "ST")) +
+  scale_color_manual(values = colors[1:2], labels = c("SE", "ST")) +
   theme(legend.position = "bottom")
 ggsave(filename = paste0(outputDir, "paper/rq2_1_combined_mutation_score_per_component_violin.png"), width = 11, height = 8)
 

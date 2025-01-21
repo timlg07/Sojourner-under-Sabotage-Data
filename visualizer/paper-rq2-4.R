@@ -51,7 +51,7 @@ ggplot(data = percentages, aes(
   theme(legend.position = "bottom") +
   geom_text(aes(label = count), size = 3, position = position_stack(vjust = .5)) +
 
-  scale_x_discrete(labels = c("ST", "SE")) +
+  scale_x_discrete(labels = c("SE", "ST")) +
   facet_grid(~ componentName, switch = "x") +
   theme(panel.spacing.x = grid::unit(2, "mm"),
         strip.placement = "outside",

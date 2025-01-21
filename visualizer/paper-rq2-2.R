@@ -29,7 +29,7 @@ ggplot(data = coverage, aes(x = group, y = fraction, fill = group, color = group
   scale_color_manual(values = colors[c(5,4)]) +
   scale_y_continuous(labels = scales::percent_format(scale = 100), limits = c(0.5, 1)) +
   labs(x = element_blank(), y = "Coverage at activation") +
-  scale_x_discrete(labels = c("ST", "SE")) +
+  scale_x_discrete(labels = c("SE", "ST")) +
 
   facet_grid(~ componentName, switch = "x") +
   theme(panel.spacing.x = grid::unit(2, "mm"),
@@ -52,8 +52,8 @@ ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation
 #   geom_boxplot(width = .2, position = position_dodge(preserve = "single", width = 1), color = "white") +
 #   labs(x = element_blank(), y = "Coverage at activation") +
 #   scale_y_continuous(labels = scales::percent_format(scale = 100), limits = c(0.5, 1)) +
-#   scale_fill_manual(values = colors[1:2], labels = c("ST", "SE")) +
-#   scale_color_manual(values = colors[1:2], labels = c("ST", "SE")) +
+#   scale_fill_manual(values = colors[1:2], labels = c("SE", "ST")) +
+#   scale_color_manual(values = colors[1:2], labels = c("SE", "ST")) +
 #   theme(legend.position = "bottom")
 #
 # ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation_per_component__old_design.png"), width = 12, height = 8)

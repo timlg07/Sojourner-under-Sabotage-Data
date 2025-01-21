@@ -56,7 +56,7 @@ ggplot(data = methods, aes(
   scale_fill_manual(values = colors[1:2]) +
   scale_color_manual(values = colors[c(5,4)]) +
 
-  scale_x_discrete(labels = c("ST", "SE")) +
+  scale_x_discrete(labels = c("SE", "ST")) +
   facet_grid(~ componentName, switch = "x") +
   theme(panel.spacing.x = grid::unit(2, "mm"),
         strip.placement = "outside",
