@@ -5,6 +5,7 @@ library(ggdark)
 library(dplyr)
 library(purrr)
 library(reshape2)
+library(ggpmisc)
 
 source("./visualizer/utils.R")
 
@@ -105,3 +106,59 @@ ggplot(data = mutation_score, aes(
   )
 ggsave(filename = paste0(outputDir, "paper/rq2_1_combined_mutation_score_per_component_violin.png"), width = 11, height = 8)
 
+
+# mutation score vs target killed regression -----------------------------------#
+
+destroyed_or_alarm <- fromJSON(txt = "./visualizer/r_json/destroyedOrAlarm_r.json", flatten = TRUE) %>%
+  group_by(user) %>%
+  filter(n() > 1) %>%
+  ungroup() %>%
+  levelNumbers()
+
+mutation_score_vs_target_killed <- merge(mutation_score, destroyed_or_alarm, by = c("user", "componentName"))
+
+mutation_score_vs_target_killed_by_user <- mutation_score_vs_target_killed %>%
+  group_by(user) %>%
+  summarise(
+    score = mean(score),
+    alarm = sum(value == "alarm"),
+    destroyed = sum(value == "destroyed"),
+    group = first(group)
+  )
+
+mutation_score_vs_target_killed_by_user_ST <- mutation_score_vs_target_killed_by_user %>%
+  filter(group == "2_ST")
+mutation_score_vs_target_killed_by_user_SE <- mutation_score_vs_target_killed_by_user %>%
+  filter(group == "1_SE")
+
+plot_score_vs_result_regression <- function(data) {
+  set.seed(42)
+  ggplot(data = data) +
+    theme_minimal() +
+    geom_point(aes(x = score, y = destroyed, color = "Destroyed"), pch = 20, alpha = .5, size = 6, position = position_jitter(width = 0, height = 0.05)) +
+    geom_point(aes(x = score, y = alarm, color = "Alarm"), pch = 20, alpha = .5, size = 6, position = position_jitter(width = 0, height = 0.05)) +
+
+    stat_poly_line(aes(x = score, y = destroyed, color = "Destroyed"), method = "lm", se = FALSE, formula = y ~ x) +
+    stat_poly_eq(aes(x = score, y = destroyed, color = "Destroyed",
+                     label = paste(..rr.label.., ..p.value.label.., sep = "*`,`~")),
+                 label.y = 0.85, label.x = 0.5) +
+
+    stat_poly_line(aes(x = score, y = alarm, color = "Alarm"), method = "lm", se = FALSE, formula = y ~ x) +
+    stat_poly_eq(aes(x = score, y = alarm, color = "Alarm",
+                     label = paste(..rr.label.., ..p.value.label.., sep = "*`,`~")),
+                 label.y = 0.075, label.x = 0.5) +
+
+    labs(x = "Average mutation coverage", y = "Number of events", color = "Event result") +
+    scale_color_manual(values = colors[c(3, 5)], labels = c("Alarm (Mutant detected)", "Destroyed (Mutant not detected)")) +
+    scale_x_continuous(labels = scales::percent_format(scale = 100)) +
+    scale_y_continuous(breaks = seq(0, 13, 1), minor_breaks = numeric(0)) +
+    theme(legend.position = "bottom")
+}
+
+print("ST")
+plot_score_vs_result_regression(mutation_score_vs_target_killed_by_user_ST)
+ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_vs_target_killed_regression__ST.png"), width = 6, height = 4)
+
+print("SE")
+plot_score_vs_result_regression(mutation_score_vs_target_killed_by_user_SE)
+ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_vs_target_killed_regression__SE.png"), width = 6, height = 4)
