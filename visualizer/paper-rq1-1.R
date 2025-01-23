@@ -37,7 +37,7 @@ times <- merge(time_testing, time_debugging, by = c("user", "componentName"), al
   # %>% mutate(total = test + debug)
 
 plot_time_spent <- function(time_df, box_plot_scale = .5, test_group) {
-  time_df <- time_df %>% filterDataByTestGroup(test_groups[test_group]) %>%
+  time_df <- time_df %>% filterDataByTestGroup(test_groups[test_group])
   df_melted <- melt(levelNumbers(time_df), id = c("user", "componentName")) %>%
     mutate(variable = ifelse(variable == "test", "1 Testing", ifelse(variable == "debug","2 Debugging", "3 Total"))) %>%
     filter(value > 0)
@@ -68,7 +68,7 @@ plot_time_spent <- function(time_df, box_plot_scale = .5, test_group) {
 }
 
 do_plot <- function (for_group) {
-  plot <- plot_time_spent(times, test_group = test_groups[for_group])
+  plot <- plot_time_spent(times, test_group = for_group)
   ggsave(filename = paste0(outputDir, "paper/rq1_1_time_spent_per_component__",for_group,".png"), plot,
          width = 4.714, height = 3.3)
 }
