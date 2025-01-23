@@ -84,3 +84,35 @@ plot <- plot +
 
 plot
 ggsave(filename = paste0(outputDir, "paper/rq1_2_combined_time_spent_on_tasks_with_mean.png"), plot, width = 4.714, height = 3.3)
+
+
+pwt_data <- total_time %>%
+  splitDataByTestGroup()
+res <- "RQ1.2: Time spent on each task\n  1. Testing\n"
+pwt_res <- pairwise.wilcox.test(
+  pwt_data$test,
+  pwt_data$group,
+  p.adjust.method = "none",
+  distribution = "exact"
+)
+res <- (paste0(res, "  p-value = ", pwt_res$p.value, "\n"))
+
+res <- paste0(res, "  2. Debugging\n")
+pwt_res <- pairwise.wilcox.test(
+  pwt_data$debug,
+  pwt_data$group,
+  p.adjust.method = "none",
+  distribution = "exact"
+)
+res <- (paste0(res, "  p-value = ", pwt_res$p.value, "\n"))
+
+res <- paste0(res, "  3. Other\n")
+pwt_res <- pairwise.wilcox.test(
+  pwt_data$other,
+  pwt_data$group,
+  p.adjust.method = "none",
+  distribution = "exact"
+)
+res <- (paste0(res, "  p-value = ", pwt_res$p.value, "\n"))
+
+cat(res)

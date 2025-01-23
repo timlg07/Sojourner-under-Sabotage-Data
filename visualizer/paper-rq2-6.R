@@ -81,3 +81,26 @@ ggplot(data = smells_melted_by_component_total, aes(
   )
 
 ggsave(paste0(outputDir, "paper/rq2_6_combined_test_smells_per_level.png"), width = 6.14, height = 4.3)
+
+
+pwt_data <- smells_melted %>%
+  splitDataByTestGroup() %>%
+  sort_by(smells_melted$componentName) %>%
+  group_by(componentName, group, user) %>%
+  summarise(value = sum(value))
+
+component_names <- unique(pwt_data$componentName)
+res <- "RQ2.6: Number of Test Smells\n"
+for (cn in component_names) {
+  pwt_data_cn <- pwt_data %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    pwt_data_cn$value,
+    pwt_data_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    ", cn, ": p-value = ", pwt_res$p.value, "\n"))
+}
+
+cat(res)

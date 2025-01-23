@@ -85,8 +85,8 @@ loadSurveySTData <- function() {
 }
 
 test_groups <- c(
-  SE = "1_SE",
-  ST = "2_ST"
+  SE = "SE",
+  ST = "ST"
 )
 
 splitDataByTestGroup <- function (data) {

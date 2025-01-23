@@ -40,8 +40,8 @@ coverage_per_player <- coverage %>%
 cov_and_result <- inner_join(coverage_per_player, cov_and_result, by = "user")
 
 cov_and_result <- cov_and_result %>% splitDataByTestGroup()
-cov_and_result_SE <- cov_and_result %>% filter(group == "1_SE")
-cov_and_result_ST <- cov_and_result %>% filter(group == "2_ST")
+cov_and_result_SE <- cov_and_result %>% filter(group == "SE")
+cov_and_result_ST <- cov_and_result %>% filter(group == "ST")
 
 set.seed(42)
 plot_cov_vs_result <- function(data)
@@ -73,3 +73,28 @@ ggsave(filename = paste0(outputDir, "paper/rq2_5_coverage_vs_target_killed_regre
 plot_cov_vs_result(cov_and_result_ST)
 ggsave(filename = paste0(outputDir, "paper/rq2_5_coverage_vs_target_killed_regression__ST.png"),
        width = 4.714, height = 3.3)
+
+
+pwt_data <- cov_and_result
+res <- "RQ2.5: Result (mutant detected or not)\n  1. Alarm triggered / mutant detected\n"
+
+pwt_res <- pairwise.wilcox.test(
+  pwt_data$alarm,
+  pwt_data$group,
+  p.adjust.method = "none",
+  distribution = "exact"
+)
+
+res <- (paste0(res, "    p-value = ", pwt_res$p.value, "\n"))
+res <- paste0(res, "  2. Destroyed / mutant not detected\n")
+
+pwt_res <- pairwise.wilcox.test(
+  pwt_data$destroyed,
+  pwt_data$group,
+  p.adjust.method = "none",
+  distribution = "exact"
+)
+
+res <- (paste0(res, "    p-value = ", pwt_res$p.value, "\n"))
+cat(res)
+

@@ -75,3 +75,34 @@ do_plot <- function (for_group) {
 
 do_plot("SE")
 do_plot("ST")
+
+
+times_with_group <- times %>%
+  levelNumbers() %>%
+  splitDataByTestGroup()
+component_names <- unique(times_with_group$componentName)
+res <- "RQ1.1: Time spent on each level\n  1. Testing\n"
+for (cn in component_names) {
+  times_with_group_cn <- times_with_group %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    times_with_group_cn$test,
+    times_with_group_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    Level: ", cn, "; p-value: ", pwt_res$p.value, "\n"))
+}
+res <- paste0(res, "  2. Debugging\n")
+for (cn in component_names) {
+  times_with_group_cn <- times_with_group %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    times_with_group_cn$debug,
+    times_with_group_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    ", cn, ": p-value = ", pwt_res$p.value, "\n"))
+}
+cat(res)

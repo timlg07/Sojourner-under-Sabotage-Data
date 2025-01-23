@@ -66,3 +66,24 @@ ggplot(data = methods, aes(
 
 ggsave(paste0(outputDir, "paper/rq2_3_combined_number_of_test_methods_per_component_per_user_per_component.png"),
        width = 4.714, height = 3.3)
+
+
+
+pwt_data <- methods %>%
+  splitDataByTestGroup() %>%
+  sort_by(methods$componentName)
+component_names <- unique(pwt_data$componentName)
+res <- "RQ2.3: Number of Test Methods\n"
+for (cn in component_names) {
+  pwt_data_cn <- pwt_data %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    pwt_data_cn$value,
+    pwt_data_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    ", cn, ": p-value = ", pwt_res$p.value, "\n"))
+}
+
+cat(res)

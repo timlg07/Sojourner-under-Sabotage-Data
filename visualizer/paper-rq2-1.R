@@ -128,9 +128,9 @@ mutation_score_vs_target_killed_by_user <- mutation_score_vs_target_killed %>%
   )
 
 mutation_score_vs_target_killed_by_user_ST <- mutation_score_vs_target_killed_by_user %>%
-  filter(group == "2_ST")
+  filter(group == test_groups["ST"])
 mutation_score_vs_target_killed_by_user_SE <- mutation_score_vs_target_killed_by_user %>%
-  filter(group == "1_SE")
+  filter(group == test_groups["SE"])
 
 plot_score_vs_result_regression <- function(data) {
   set.seed(42)
@@ -165,3 +165,23 @@ print("SE")
 plot_score_vs_result_regression(mutation_score_vs_target_killed_by_user_SE)
 ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_vs_target_killed_regression__SE.png"),
        width = 4.714, height = 3.3)
+
+
+pwt_data <- mutation_score %>%
+  splitDataByTestGroup() %>%
+  sort_by(mutation_score$componentName)
+component_names <- unique(pwt_data$componentName)
+res <- "RQ2.1: Mutation Score\n"
+for (cn in component_names) {
+  pwt_data_cn <- pwt_data %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    pwt_data_cn$score,
+    pwt_data_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    ", cn, ": p-value = ", pwt_res$p.value, "\n"))
+}
+
+cat(res)

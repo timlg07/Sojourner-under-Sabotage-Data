@@ -58,3 +58,23 @@ ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation
 #   theme(legend.position = "bottom")
 #
 # ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation_per_component__old_design.png"), width = 12, height = 8)
+
+
+pwt_data <- coverage %>%
+  sort_by(pwt_data$componentName)
+component_names <- unique(pwt_data$componentName)
+res <- "RQ2.2: Coverage at activation\n  1. Line cov %\n"
+for (cn in component_names) {
+  pwt_data_cn <- pwt_data %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    pwt_data_cn$fraction,
+    pwt_data_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    ", cn, ": p-value = ", pwt_res$p.value, "\n"))
+}
+
+cat(res)
+

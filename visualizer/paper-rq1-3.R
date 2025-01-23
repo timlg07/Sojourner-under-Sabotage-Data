@@ -71,3 +71,50 @@ plot <- ggplot(data = levelNumbers(avg_per_component_melted), aes(
 plot
 ggsave(filename = paste0(outputDir, "paper/rq1_3_combined_attempts_until_activation_avg_per_component.png"),
        width = 4.714, height = 3.3)
+
+
+pwt_data <- attempts %>%
+  levelNumbers() %>%
+  splitDataByTestGroup() %>%
+  sort_by(pwt_data$componentName)
+component_names <- unique(pwt_data$componentName)
+res <- "RQ1.3: Attempts until activation\n  1. Errors\n"
+for (cn in component_names) {
+  pwt_data_cn <- pwt_data %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    pwt_data_cn$errors,
+    pwt_data_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    ", cn, ": p-value = ", pwt_res$p.value, "\n"))
+}
+
+res <- paste0(res, "  2. Fails\n")
+for (cn in component_names) {
+  pwt_data_cn <- pwt_data %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    pwt_data_cn$fails,
+    pwt_data_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    ", cn, ": p-value = ", pwt_res$p.value, "\n"))
+}
+
+res <- paste0(res, "  3. Successes\n")
+for (cn in component_names) {
+  pwt_data_cn <- pwt_data %>% filter(cn == componentName)
+  pwt_res <- pairwise.wilcox.test(
+    pwt_data_cn$successes,
+    pwt_data_cn$group,
+    p.adjust.method = "none",
+    distribution = "exact"
+  )
+
+  res <- (paste0(res, "    ", cn, ": p-value = ", pwt_res$p.value, "\n"))
+}
+
+cat(res)
