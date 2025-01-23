@@ -57,4 +57,4 @@ ggplot(data = percentages, aes(
         strip.placement = "outside",
         strip.background = element_blank()
   )
-ggsave(filename = paste0(outputDir, "paper/rq2_4_combined_target_mutant_killed.png"), width = 6, height = 4)
+ggsave(filename = paste0(outputDir, "paper/rq2_4_combined_target_mutant_killed.png"), width = 4.714, height = 3.3)

@@ -84,6 +84,11 @@ loadSurveySTData <- function() {
   return(surveyST)
 }
 
+test_groups <- c(
+  SE = "1_SE",
+  ST = "2_ST"
+)
+
 splitDataByTestGroup <- function (data) {
   survey_users_ST <- read.csv("./visualizer/surveyST.csv") %>%
     select(user = Username) %>%
@@ -97,8 +102,16 @@ splitDataByTestGroup <- function (data) {
   data_SE <- data %>%
     inner_join(survey_users_SE, by = "user")
 
-  combined <- mutate(data_ST, group = "2_ST") %>%
-    bind_rows(mutate(data_SE, group = "1_SE"))
+  combined <- mutate(data_ST, group = test_groups["ST"]) %>%
+    bind_rows(mutate(data_SE, group = test_groups["SE"]))
 
   return(combined)
+}
+
+filterDataByTestGroup <- function(data, group) {
+  survey_name <- if (group == test_groups["SE"]) "survey" else "surveyST"
+  survey_users <- read.csv(paste0("./visualizer/", survey_name, ".csv")) %>%
+    select(user = Username) %>%
+    distinct()
+  return(data %>% inner_join(survey_users, by = "user"))
 }

@@ -67,7 +67,9 @@ plot_cov_vs_result <- function(data)
     theme(legend.position = "bottom")
 
 plot_cov_vs_result(cov_and_result_SE)
-ggsave(filename = paste0(outputDir, "paper/rq2_5_coverage_vs_target_killed_regression__SE.png"), width = 6, height = 4)
+ggsave(filename = paste0(outputDir, "paper/rq2_5_coverage_vs_target_killed_regression__SE.png"),
+       width = 4.714, height = 3.3)
 
 plot_cov_vs_result(cov_and_result_ST)
-ggsave(filename = paste0(outputDir, "paper/rq2_5_coverage_vs_target_killed_regression__ST.png"), width = 6, height = 4)
+ggsave(filename = paste0(outputDir, "paper/rq2_5_coverage_vs_target_killed_regression__ST.png"),
+       width = 4.714, height = 3.3)

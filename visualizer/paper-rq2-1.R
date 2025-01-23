@@ -104,7 +104,8 @@ ggplot(data = mutation_score, aes(
         strip.background = element_blank(),
         legend.position = "none"
   )
-ggsave(filename = paste0(outputDir, "paper/rq2_1_combined_mutation_score_per_component_violin.png"), width = 11, height = 8)
+ggsave(filename = paste0(outputDir, "paper/rq2_1_combined_mutation_score_per_component_violin.png"),
+       width = 4.714, height = 3.3)
 
 
 # mutation score vs target killed regression -----------------------------------#
@@ -157,8 +158,10 @@ plot_score_vs_result_regression <- function(data) {
 
 print("ST")
 plot_score_vs_result_regression(mutation_score_vs_target_killed_by_user_ST)
-ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_vs_target_killed_regression__ST.png"), width = 6, height = 4)
+ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_vs_target_killed_regression__ST.png"),
+       width = 4.714, height = 3.3)
 
 print("SE")
 plot_score_vs_result_regression(mutation_score_vs_target_killed_by_user_SE)
-ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_vs_target_killed_regression__SE.png"), width = 6, height = 4)
+ggsave(filename = paste0(outputDir, "paper/rq2_1_mutation_score_vs_target_killed_regression__SE.png"),
+       width = 4.714, height = 3.3)

@@ -40,27 +40,27 @@ plot <- ggplot(data = levelNumbers(avg_per_component_melted), aes(
   labs(#title = "Average errors, fails and successes of test run attempts per component",
     x = element_blank(), y = "Average", fill = "Result: ") +
   scale_fill_manual(values = c(colors[7], colors[12], colors[2]),
-                    labels = c("Compilation error", "Runtime/Assertion error", "Tests passed")) +
+                    labels = c("Compilation\nerror", "Runtime/Assertion\nerror", "Tests\npassed")) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
   scale_x_discrete(labels = c("SE", "ST")) +
 
   # using $variable inside color= is buggy when using facet_grid, so do it twice i I guess
-  geom_text(aes(label = ifelse(variable == "avg_errors",
-                ifelse(value > 0, paste0(
-                  round(value / total * 100, 0),
-                  " %\n(",
-                  round(value, 1), ")"
-                ), ''), element_blank())),
-            color = "white",
-            position = position_stack(vjust = 0.5), size = 3) +
-  geom_text(aes(label = ifelse(variable != "avg_errors",
-                ifelse(value > 0, paste0(
-                  round(value / total * 100, 0),
-                  " %\n(",
-                  round(value, 1), ")"
-                ), ''), element_blank())),
-            color = "black",
-            position = position_stack(vjust = 0.5), size = 3) +
+  # geom_text(aes(label = ifelse(variable == "avg_errors",
+  #               ifelse(value > 0, paste0(
+  #                 round(value / total * 100, 0),
+  #                 " %\n(",
+  #                 round(value, 1), ")"
+  #               ), ''), element_blank())),
+  #           color = "white",
+  #           position = position_stack(vjust = 0.5), size = 3) +
+  # geom_text(aes(label = ifelse(variable != "avg_errors",
+  #               ifelse(value > 0, paste0(
+  #                 round(value / total * 100, 0),
+  #                 " %\n(",
+  #                 round(value, 1), ")"
+  #               ), ''), element_blank())),
+  #           color = "black",
+  #           position = position_stack(vjust = 0.5), size = 3) +
 
   theme(legend.position = "bottom") +
   facet_grid(~ componentName, switch = "x") +
@@ -69,4 +69,5 @@ plot <- ggplot(data = levelNumbers(avg_per_component_melted), aes(
         strip.background = element_blank(),
   )
 plot
-ggsave(filename = paste0(outputDir, "paper/rq1_3_combined_attempts_until_activation_avg_per_component.png"), width = 10, height = 5)
+ggsave(filename = paste0(outputDir, "paper/rq1_3_combined_attempts_until_activation_avg_per_component.png"),
+       width = 4.714, height = 3.3)

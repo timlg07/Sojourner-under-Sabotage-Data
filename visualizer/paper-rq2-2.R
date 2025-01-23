@@ -38,7 +38,8 @@ ggplot(data = coverage, aes(x = group, y = fraction, fill = group, color = group
         legend.position = "none"
   )
 
-ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation_per_component.png"), width = 12, height = 8)
+ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation_per_component.png"),
+       width = 4.714, height = 3.3)
 
 
 

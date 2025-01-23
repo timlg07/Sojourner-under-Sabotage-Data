@@ -32,4 +32,4 @@ plot <- ggplot(data = levelNumbers(prints_per_component_total), aes(x = componen
   scale_y_continuous(breaks = seq(0, 100, 1)) +
   geom_text(aes(label = paste("Total:", total)), vjust = 2, size = 3, color = "white")
 plot
-ggsave(paste0(outputDir, "paper/rq3_2_prints_added_per_component.png"), width = 6, height = 4)
+ggsave(paste0(outputDir, "paper/rq3_2_prints_added_per_component.png"),width = 4.714, height = 3.3)

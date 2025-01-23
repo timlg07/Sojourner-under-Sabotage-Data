@@ -73,9 +73,8 @@ plot <- ggplot(data = total_time_melted, aes(
         strip.background = element_blank(),
   )
 
-
 plot
-ggsave(filename = paste0(outputDir, "paper/rq1_2_combined_time_spent_on_tasks.png"), plot, width = 5, height = 4)
+ggsave(filename = paste0(outputDir, "paper/rq1_2_combined_time_spent_on_tasks.png"), plot, width = 4.714, height = 3.3)
 
 # show mean value at the center of the boxplot
 plot <- plot +
@@ -84,4 +83,4 @@ plot <- plot +
 
 
 plot
-ggsave(filename = paste0(outputDir, "paper/rq1_2_combined_time_spent_on_tasks_with_mean.png"), plot, width = 5, height = 4)
+ggsave(filename = paste0(outputDir, "paper/rq1_2_combined_time_spent_on_tasks_with_mean.png"), plot, width = 4.714, height = 3.3)

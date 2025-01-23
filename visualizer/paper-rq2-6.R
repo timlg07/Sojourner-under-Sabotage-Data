@@ -62,7 +62,7 @@ ggplot(data = smells_melted_by_component_total, aes(
 )) +
   theme_minimal() +
   geom_bar(stat = "identity", position = "stack") +
-  labs(x = element_blank(), y = "Number of Test Smells", fill = "Test Smell Type") +
+  labs(x = element_blank(), y = "Number of Test Smells", fill = "Test\nSmell\nType  ") +
   # geom_text(aes(label = ifelse(percentage >= 3 & value > 9,
   #                              paste0(round(percentage, 0), "% (", round(value, 0), ")"),
   #                              '')),
@@ -73,7 +73,11 @@ ggplot(data = smells_melted_by_component_total, aes(
   facet_grid(~ componentName, switch = "x") +
   theme(panel.spacing.x = grid::unit(2, "mm"),
         strip.placement = "outside",
-        strip.background = element_blank()
+        strip.background = element_blank(),
+        legend.position = "bottom",
+        legend.justification = "left",
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10),
   )
 
-ggsave(paste0(outputDir, "paper/rq2_6_combined_test_smells_per_level.png"), width = 10, height = 5)
+ggsave(paste0(outputDir, "paper/rq2_6_combined_test_smells_per_level.png"), width = 6.14, height = 4.3)

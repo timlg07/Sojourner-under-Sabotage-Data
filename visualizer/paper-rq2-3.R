@@ -64,4 +64,5 @@ ggplot(data = methods, aes(
         legend.position = "none"
   )
 
-ggsave(paste0(outputDir, "paper/rq2_3_combined_number_of_test_methods_per_component_per_user_per_component.png"), width = 5, height = 4)
+ggsave(paste0(outputDir, "paper/rq2_3_combined_number_of_test_methods_per_component_per_user_per_component.png"),
+       width = 4.714, height = 3.3)
