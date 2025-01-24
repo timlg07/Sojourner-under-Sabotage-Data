@@ -92,7 +92,7 @@ ggplot(data = mutation_score, aes(
   theme_minimal() +
   geom_violin(color = "transparent", alpha = .5, width = 1) +
   geom_boxplot(width = .2) +
-  labs(x = element_blank(), y = "Mutation coverage") +
+  labs(x = element_blank(), y = "Mutation score") +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
   scale_fill_manual(values = colors[1:2], labels = c("SE", "ST")) +
   scale_color_manual(values = colors[c(5,4)], labels = c("SE", "ST")) +
@@ -149,8 +149,8 @@ plot_score_vs_result_regression <- function(data) {
                      label = paste(..rr.label.., ..p.value.label.., sep = "*`,`~")),
                  label.y = 0.075, label.x = 0.5) +
 
-    labs(x = "Average mutation coverage", y = "Number of events", color = "Event result") +
-    scale_color_manual(values = colors[c(3, 5)], labels = c("Alarm (Mutant detected)", "Destroyed (Mutant not detected)")) +
+    labs(x = "Average mutation score", y = "Number of events", color = "Event result") +
+    scale_color_manual(values = colors[c(3, 5)], labels = c("Alarm\n(Mutant detected)", "Destroyed\n(Mutant not detected)")) +
     scale_x_continuous(labels = scales::percent_format(scale = 100)) +
     scale_y_continuous(breaks = seq(0, 13, 1), minor_breaks = numeric(0)) +
     theme(legend.position = "bottom")

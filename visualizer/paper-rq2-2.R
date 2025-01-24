@@ -28,7 +28,7 @@ ggplot(data = coverage, aes(x = group, y = fraction, fill = group, color = group
   scale_fill_manual(values = colors[1:2]) +
   scale_color_manual(values = colors[c(5,4)]) +
   scale_y_continuous(labels = scales::percent_format(scale = 100), limits = c(0.5, 1)) +
-  labs(x = element_blank(), y = "Coverage at activation") +
+  labs(x = element_blank(), y = "Line Coverage at activation") +
   scale_x_discrete(labels = c("SE", "ST")) +
 
   facet_grid(~ componentName, switch = "x") +
@@ -51,7 +51,7 @@ ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation
 #   theme_minimal() +
 #   geom_violin(color = "transparent", alpha = .5, width = 1.25, position = position_dodge(width = 1, preserve = "single")) +
 #   geom_boxplot(width = .2, position = position_dodge(preserve = "single", width = 1), color = "white") +
-#   labs(x = element_blank(), y = "Coverage at activation") +
+#   labs(x = element_blank(), y = "Line Coverage at activation") +
 #   scale_y_continuous(labels = scales::percent_format(scale = 100), limits = c(0.5, 1)) +
 #   scale_fill_manual(values = colors[1:2], labels = c("SE", "ST")) +
 #   scale_color_manual(values = colors[1:2], labels = c("SE", "ST")) +
@@ -63,7 +63,7 @@ ggsave(filename = paste0(outputDir, "paper/rq2_2_combined_coverage_at_activation
 pwt_data <- coverage %>%
   sort_by(pwt_data$componentName)
 component_names <- unique(pwt_data$componentName)
-res <- "RQ2.2: Coverage at activation\n  1. Line cov %\n"
+res <- "RQ2.2: Line Coverage at activation\n  1. Line cov %\n"
 for (cn in component_names) {
   pwt_data_cn <- pwt_data %>% filter(cn == componentName)
   pwt_res <- pairwise.wilcox.test(

@@ -75,7 +75,8 @@ ggsave(filename = paste0(outputDir, "paper/rq1_3_combined_attempts_until_activat
 
 pwt_data <- attempts %>%
   levelNumbers() %>%
-  splitDataByTestGroup() %>%
+  splitDataByTestGroup()
+pwt_data <- pwt_data %>%
   sort_by(pwt_data$componentName)
 component_names <- unique(pwt_data$componentName)
 res <- "RQ1.3: Attempts until activation\n  1. Errors\n"
