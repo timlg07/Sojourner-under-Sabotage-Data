@@ -39,7 +39,7 @@ plot <- ggplot(data = levelNumbers(avg_per_component_melted), aes(
   geom_bar(aes(fill = variable), position = "stack", stat = 'identity') +
   labs(#title = "Average errors, fails and successes of test run attempts per component",
     x = element_blank(), y = "Average", fill = "Result: ") +
-  scale_fill_manual(values = c(colors[7], colors[12], colors[2]),
+  scale_fill_manual(values = c(colors[1], colors[2], colors[4]),
                     labels = c("Compilation\nerror", "Runtime/Assertion\nerror", "Tests\npassed")) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
   scale_x_discrete(labels = c("SE", "ST")) +
